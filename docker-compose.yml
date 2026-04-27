@@ -1,0 +1,140 @@
+# docker-compose.yml para guia turística con hot reload
+#version: '3.8'
+
+services:
+  # Base de datos PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: guia_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: guia_turistica
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: tu_contraseña
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - guia_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d guia_turistica"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Backend con Express y Sequelize
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: guia_backend
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - backend_node_modules:/app/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - guia_network
+
+  # backend anterior (daba warnings con el .env del backend)
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile.dev
+  #   container_name: guia_backend
+  #   restart: unless-stopped
+  #   environment:
+  #     - NODE_ENV=${NODE_ENV}
+  #     - PORT=${PORT}
+  #     - DB_HOST=${DB_HOST}
+  #     - DB_PORT=${DB_PORT}
+  #     - DB_NAME=${DB_NAME}
+  #     - DB_USER=${DB_USER}
+  #     - DB_PASSWORD=${DB_PASSWORD}
+  #     - JWT_SECRET=${JWT_SECRET}
+  #     - CORS_ORIGIN=${CORS_ORIGIN}
+  #   ports:
+  #     - "3001:3001"
+  #   volumes:
+  #     - ./backend:/app
+  #     - /app/node_modules
+  #     - backend_node_modules:/app/node_modules
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #   networks:
+  #     - guia_network
+
+  # Frontend con React y hot reload
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: guia_frontend
+    restart: unless-stopped
+    environment:
+      REACT_APP_API_URL: http://localhost:3001/api
+      CHOKIDAR_USEPOLLING: "true"
+      WATCHPACK_POLLING: "true"
+      FAST_REFRESH: "true"
+      WDS_SOCKET_HOST: localhost
+      WDS_SOCKET_PORT: 3000
+      WDS_SOCKET_PATH: /ws
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - guia_network
+    stdin_open: true
+    tty: true
+
+  # Nginx como reverse proxy (opcional)
+  nginx:
+    image: nginx:alpine
+    container_name: guia_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - guia_network
+
+  # Redis para cache y sesiones (opcional)
+  redis:
+    image: redis:7-alpine
+    container_name: guia_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - guia_network
+    command: redis-server --appendonly yes
+
+volumes:
+  postgres_data:
+  redis_data:
+  frontend_node_modules:
+  backend_node_modules:
+
+networks:
+  guia_network:
+    driver: bridge

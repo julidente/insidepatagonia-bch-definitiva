@@ -1,0 +1,37 @@
+# Dependencias
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Variables de entorno
+.env
+.env.*
+backend/.env
+backend/.env.*
+frontend/.env
+frontend/.env.*
+
+# Builds
+dist/
+build/
+backend/dist/
+frontend/dist/
+
+# Tests / coverage
+coverage/
+backend/coverage/
+frontend/coverage/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+#readmes que aun no estan listos 
+GuiaTuristica-README.md
+README.md
+TP FINAL README.md
