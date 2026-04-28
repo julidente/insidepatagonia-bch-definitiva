@@ -1,3 +1,4 @@
+import { optimizeCloudinaryImage } from "../utils/cloudinary";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getPostBySlug } from "../services/post.service";
@@ -78,7 +79,7 @@ export default function PostDetail() {
 
         {post.cover_image_url ? (
           <img
-            src={post.cover_image_url}
+            src={optimizeCloudinaryImage(post.cover_image_url)}
             alt={post.title}
             style={{
               width: "100%",

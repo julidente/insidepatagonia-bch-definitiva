@@ -1,3 +1,4 @@
+import { optimizeCloudinaryImage } from '../utils/cloudinary';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getActivityById } from '../services/activity.service';
@@ -122,7 +123,7 @@ const ActivityDetail = () => {
   const [activity, setActivity] = useState<Activity | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -157,16 +158,40 @@ const ActivityDetail = () => {
 
   const galleryImages = activity.images?.filter((img) => !img.is_cover) ?? [];
 
-  const getImageSrc = (url?: string | null) => {
+  const getImageSrc = (url?: string | null, width = 2000) => {
     if (!url) return null;
-    return url.startsWith('http') ? url : `${API_ORIGIN}${url}`;
+
+    if (url.startsWith('http')) {
+      return optimizeCloudinaryImage(url, width);
+    }
+
+    return `${API_ORIGIN}${url}`;
   };
 
   const formattedPrice = Number(activity.price).toLocaleString('es-AR');
 
-  const allTopImages = [coverImage, ...galleryImages].filter(Boolean).slice(0, 3);
-  const mainTopImage = allTopImages[0];
-  const secondaryTopImages = allTopImages.slice(1, 3);
+  const allImageSources = [coverImage, ...galleryImages]
+  .filter(Boolean)
+  .map((img) => getImageSrc(img?.url))
+  .filter((src): src is string => Boolean(src));
+
+  const topImages = allImageSources.slice(0, 3);
+  const mainTopImage = topImages[0];
+  const secondaryTopImages = topImages.slice(1, 3);
+
+  const goToPreviousImage = () => {
+    setSelectedImageIndex((prev) => {
+      if (prev === null || allImageSources.length === 0) return prev;
+      return prev === 0 ? allImageSources.length - 1 : prev - 1;
+    });
+  };
+
+  const goToNextImage = () => {
+    setSelectedImageIndex((prev) => {
+      if (prev === null || allImageSources.length === 0) return prev;
+      return prev === allImageSources.length - 1 ? 0 : prev + 1;
+    });
+  };
 
   const firstAvailableDate = activity.availableDates?.[0];
   const startDate = firstAvailableDate?.start_date ?? null;
@@ -225,11 +250,11 @@ const ActivityDetail = () => {
                 ...cardStyle,
               }}
             >
-              {mainTopImage && getImageSrc(mainTopImage.url) ? (
+              {mainTopImage ? (
                 <img
-                  src={getImageSrc(mainTopImage.url)!}
+                  src={mainTopImage}
                   alt={activity.name}
-                  onClick={() => setSelectedImage(getImageSrc(mainTopImage.url)!)}
+                  onClick={() => setSelectedImageIndex(0)}
                   style={{
                     width: '100%',
                     height: '100%',
@@ -258,13 +283,11 @@ const ActivityDetail = () => {
                   gap: '0.75rem',
                 }}
               >
-                {secondaryTopImages.map((img) => {
-                  const src = getImageSrc(img?.url);
-                  if (!src) return null;
+                {secondaryTopImages.map((src, index) => {
 
                   return (
                     <div
-                      key={img!.image_id}
+                      key={src}
                       style={{
                         borderRadius: '1rem',
                         overflow: 'hidden',
@@ -276,7 +299,7 @@ const ActivityDetail = () => {
                       <img
                         src={src}
                         alt={activity.name}
-                        onClick={() => setSelectedImage(src)}
+                        onClick={() => setSelectedImageIndex(index + 1)}
                         style={{
                           width: '100%',
                           height: '100%',
@@ -292,58 +315,7 @@ const ActivityDetail = () => {
             )}
           </div>
 
-          {galleryImages.length > 2 && (
-            <div style={{ marginTop: '1rem' }}>
-              <h2
-                style={{
-                  fontSize: '1.15rem',
-                  fontWeight: 700,
-                  color: '#25608f',
-                  marginBottom: '0.85rem',
-                }}
-              >
-                Más imágenes
-              </h2>
 
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-                  gap: '0.9rem',
-                }}
-              >
-                {galleryImages.slice(2).map((img) => {
-                  const src = getImageSrc(img.url);
-                  if (!src) return null;
-
-                  return (
-                    <div
-                      key={img.image_id}
-                      style={{
-                        borderRadius: '0.9rem',
-                        overflow: 'hidden',
-                        minHeight: '170px',
-                        ...cardStyle,
-                      }}
-                    >
-                      <img
-                        src={src}
-                        alt={activity.name}
-                        onClick={() => setSelectedImage(src)}
-                        style={{
-                          width: '100%',
-                          height: '170px',
-                          objectFit: 'cover',
-                          display: 'block',
-                          cursor: 'zoom-in',
-                        }}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
         </div>
 
         <aside
@@ -423,7 +395,7 @@ const ActivityDetail = () => {
 
             {activity.distance && (
               <p style={{ margin: 0 }}>
-                <strong>Distancia:</strong> {activity.distance}
+                <strong>Distancia a Recorrer:</strong> {activity.distance}
               </p>
             )}
 
@@ -869,13 +841,13 @@ const ActivityDetail = () => {
         </div>
       </section>
 
-      {selectedImage && (
+      {selectedImageIndex !== null && allImageSources[selectedImageIndex] && (
         <div
-          onClick={() => setSelectedImage(null)}
+          onClick={() => setSelectedImageIndex(null)}
           style={{
             position: 'fixed',
             inset: 0,
-            backgroundColor: 'rgba(15, 23, 42, 0.82)',
+            backgroundColor: 'rgba(15, 23, 42, 0.88)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -885,7 +857,10 @@ const ActivityDetail = () => {
           }}
         >
           <button
-            onClick={() => setSelectedImage(null)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedImageIndex(null);
+            }}
             style={{
               position: 'absolute',
               top: '1.25rem',
@@ -904,8 +879,35 @@ const ActivityDetail = () => {
             ×
           </button>
 
+          {allImageSources.length > 1 && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                goToPreviousImage();
+              }}
+              style={{
+                position: 'absolute',
+                left: '1.25rem',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'rgba(255,255,255,0.18)',
+                border: 'none',
+                color: '#fff',
+                fontSize: '3rem',
+                width: '56px',
+                height: '56px',
+                borderRadius: '9999px',
+                cursor: 'pointer',
+                lineHeight: 1,
+              }}
+              aria-label="Imagen anterior"
+            >
+              ‹
+            </button>
+          )}
+
           <img
-            src={selectedImage}
+            src={allImageSources[selectedImageIndex]}
             alt="Vista ampliada"
             onClick={(e) => e.stopPropagation()}
             style={{
@@ -917,6 +919,53 @@ const ActivityDetail = () => {
               cursor: 'default',
             }}
           />
+
+          {allImageSources.length > 1 && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                goToNextImage();
+              }}
+              style={{
+                position: 'absolute',
+                right: '1.25rem',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'rgba(255,255,255,0.18)',
+                border: 'none',
+                color: '#fff',
+                fontSize: '3rem',
+                width: '56px',
+                height: '56px',
+                borderRadius: '9999px',
+                cursor: 'pointer',
+                lineHeight: 1,
+              }}
+              aria-label="Imagen siguiente"
+            >
+              ›
+            </button>
+          )}
+
+          {allImageSources.length > 1 && (
+            <div
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                position: 'absolute',
+                bottom: '1.25rem',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                background: 'rgba(15,23,42,0.75)',
+                color: '#fff',
+                padding: '0.35rem 0.8rem',
+                borderRadius: '9999px',
+                fontSize: '0.9rem',
+                fontWeight: 600,
+              }}
+            >
+              {selectedImageIndex + 1} / {allImageSources.length}
+            </div>
+          )}
         </div>
       )}
     </section>

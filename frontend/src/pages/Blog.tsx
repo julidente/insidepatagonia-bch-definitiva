@@ -1,3 +1,4 @@
+import { optimizeCloudinaryImage } from "../utils/cloudinary";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getPublishedPosts } from "../services/post.service";
@@ -78,8 +79,9 @@ export default function Blog() {
               <Link to={`/blog/${post.slug}`} style={{ textDecoration: "none", color: "inherit" }}>
                 {post.cover_image_url ? (
                   <img
-                    src={post.cover_image_url}
+                    src={optimizeCloudinaryImage(post.cover_image_url, 800)}
                     alt={post.title}
+                    loading="lazy"
                     style={{
                       width: "100%",
                       height: "220px",
