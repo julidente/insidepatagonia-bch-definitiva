@@ -1,4 +1,4 @@
-import { getStoredToken } from "./authStorage";
+import { getStoredToken, clearStoredToken } from "./authStorage";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -20,6 +20,16 @@ export async function apiClient(endpoint: string, options: RequestInit = {}) {
     ...options,
     headers
   });
+
+  if (response.status === 401 || response.status === 403) {
+    clearStoredToken();
+
+    if (!window.location.pathname.includes("/login")) {
+      window.location.href = "/login?expired=true";
+    }
+
+    throw new Error("Tu sesión expiró. Iniciá sesión nuevamente.");
+  }
 
   if (!response.ok) {
     const text = await response.text();

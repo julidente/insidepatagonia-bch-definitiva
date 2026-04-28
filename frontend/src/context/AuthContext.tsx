@@ -11,6 +11,25 @@ interface AuthContextValue {
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+function getTokenExpirationTime(token: string): number | null {
+  try {
+    const payloadBase64 = token.split(".")[1];
+
+    if (!payloadBase64) {
+      return null;
+    }
+
+    const payload = JSON.parse(atob(payloadBase64));
+
+    if (!payload.exp) {
+      return null;
+    }
+
+    return payload.exp * 1000;
+  } catch {
+    return null;
+  }
+}
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [token, setToken] = useState<string | null>(null);
@@ -35,7 +54,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
     clearStoredToken();
   };
+  useEffect(() => {
+    if (!token) {
+      return;
+    }
 
+    const expirationTime = getTokenExpirationTime(token);
+
+    if (!expirationTime) {
+      return;
+    }
+
+    const timeUntilExpiration = expirationTime - Date.now();
+
+    if (timeUntilExpiration <= 0) {
+      logout();
+      window.location.href = "/login?expired=true";
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      logout();
+      window.location.href = "/login?expired=true";
+    }, timeUntilExpiration);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [token]);
   return (
     <AuthContext.Provider
       value={{

@@ -23,6 +23,7 @@ const Login = () => {
   const { login } = useAuthContext();
   const [apiError, setApiError] = useState<string | null>(null);
   const from = location.state?.from?.pathname || "/admin";
+  const sessionExpired = new URLSearchParams(location.search).get("expired") === "true";
 
   const onSubmit = async (data: LoginData) => {
     setApiError(null);
@@ -106,6 +107,21 @@ const Login = () => {
             </p>
           )}
         </div>
+
+        {sessionExpired && (
+          <p
+            style={{
+              backgroundColor: "#fef3c7",
+              color: "#92400e",
+              border: "1px solid #f59e0b",
+              borderRadius: "0.375rem",
+              padding: "0.5rem",
+              fontSize: "0.85rem"
+            }}
+          >
+            Tu sesión expiró. Iniciá sesión nuevamente para continuar.
+          </p>
+        )}
 
         {apiError && (
           <p style={{ color: "crimson", fontSize: "0.85rem" }}>{apiError}</p>
