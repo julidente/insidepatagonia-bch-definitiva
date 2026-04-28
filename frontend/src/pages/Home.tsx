@@ -1,3 +1,4 @@
+import { optimizeCloudinaryImage } from '../utils/cloudinary';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getActivities } from '../services/activity.service';
@@ -264,7 +265,9 @@ const Home = () => {
               const cover =
                 rawCover && !rawCover.startsWith('http')
                   ? `${API_ORIGIN}${rawCover}`
-                  : rawCover;
+                  : rawCover
+                    ? optimizeCloudinaryImage(rawCover, 800)
+                    : rawCover;
 
               return (
                 <Link
