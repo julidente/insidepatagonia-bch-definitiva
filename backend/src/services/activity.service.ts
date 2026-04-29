@@ -1,4 +1,6 @@
 import activityRepository from '../repositories/activity.repository';
+import imageRepository from '../repositories/image.repository';
+import cloudinary from '../config/cloudinary';
 import { CreateActivityDTO, UpdateActivityDTO } from '../dtos/activity.dto';
 import { Activity } from '../models/entity/activity.entity';
 import { AvailableDate } from '../models/entity/availableDate.entity';
@@ -71,8 +73,26 @@ export class ActivityService {
   }
 
   async delete(activity_id: number) {
+    const activity = await activityRepository.getById(activity_id);
+
+    if (!activity) {
+      throw new Error('Actividad no encontrada');
+    }
+
+    const images = await imageRepository.getByActivityId(activity_id);
+
+    for (const image of images) {
+      if (image.public_id) {
+        await cloudinary.uploader.destroy(image.public_id);
+      }
+    }
+
     const deleted = await activityRepository.delete(activity_id);
-    if (!deleted) throw new Error('Actividad no encontrada');
+
+    if (!deleted) {
+      throw new Error('Actividad no encontrada');
+    }
+
     return deleted;
   }
 }
