@@ -6,4 +6,6 @@ export const strategyMap: Record<string, new () => ISortStrategy> = {
   priceAsc: Strategies.SortByPriceAsc,
   priceDesc: Strategies.SortByPriceDesc,
   name: Strategies.SortByName,
+  startDateAsc: Strategies.SortByStartDateAsc,
+  startDateDesc: Strategies.SortByStartDateDesc,
 };

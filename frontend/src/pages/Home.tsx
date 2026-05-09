@@ -1,13 +1,14 @@
 import { optimizeCloudinaryImage } from '../utils/cloudinary';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import SEO from "../components/SEO";
 import { getActivities } from '../services/activity.service';
 import type { Activity } from '../types/activity';
 
 const API_URL = import.meta.env.VITE_API_URL;
 const API_ORIGIN = API_URL.replace(/\/api\/?$/, '');
 
-type SortValue = '' | 'priceAsc' | 'priceDesc' | 'nameAsc' | 'nameDesc';
+type SortValue = '' | 'priceAsc' | 'priceDesc' | 'nameAsc' | 'nameDesc'| 'startDateAsc' | 'startDateDesc';
 
 const Home = () => {
   const [activities, setActivities] = useState<Activity[]>([]);
@@ -15,6 +16,7 @@ const Home = () => {
   const [error, setError] = useState<string | null>(null);
   const [sort, setSort] = useState<SortValue>('');
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const location = useLocation();
 
   const loadActivities = async (selectedSort: SortValue) => {
     try {
@@ -51,6 +53,17 @@ const Home = () => {
     loadActivities('');
   }, []);
 
+  useEffect(() => {
+  if (location.hash !== '#experiencias') return;
+
+  const timeoutId = window.setTimeout(() => {
+    const section = document.getElementById('experiencias');
+    section?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
+
+  return () => window.clearTimeout(timeoutId);
+}, [location]);
+
   const handleSortChange = (value: SortValue) => {
     setSort(value);
     loadActivities(value);
@@ -76,8 +89,28 @@ const Home = () => {
 
   return (
     <div>
+      <SEO
+        title="Inside Patagonia - sitio oficial"
+        description="Descubre las mejores aventuras, actividades y experiencias en la Patagonia con Inside Patagonia. Excursiones seleccionadas, salidas inolvidables."
+        canonical="/"
+      />
       <style>
         {`
+          .identity-section {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            background-color: #000;
+            align-items: start;
+          }
+
+          .identity-section img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            display: block;
+          }
+
           .activity-card {
             background-color: white;
             border-radius: 1rem;
@@ -103,8 +136,36 @@ const Home = () => {
           .activity-card:hover .activity-card-image {
             transform: scale(1.05);
           }
+
+          @media (max-width: 900px) {
+            .identity-section {
+              grid-template-columns: 1fr;
+            }
+
+            .identity-section img {
+              height: auto;
+              object-fit: contain;
+            }
+          }
         `}
       </style>
+
+      <section className="identity-section">
+        <img
+          src="/home/3.PNG"
+          alt="Aventura - Inside Patagonia"
+        />
+
+        <img
+          src="/home/2.PNG"
+          alt="Movimiento - RetoSur"
+        />
+
+        <img
+          src="/home/1.PNG"
+          alt="Mirada - Ilumina"
+        />
+      </section>
 
       <section
         style={{
@@ -132,7 +193,7 @@ const Home = () => {
               opacity: 0.9,
             }}
           >
-            EXPERIENCIAS EN PATAGONIA
+            inside patagonia
           </p>
 
           <h1
@@ -142,7 +203,7 @@ const Home = () => {
               marginBottom: '0.75rem',
             }}
           >
-            Descubrí los mejores tours de la patagonia
+            INGRESA A LA AVENTURA
           </h1>
 
           <p
@@ -161,6 +222,7 @@ const Home = () => {
       </section>
 
       <section
+        id="experiencias"
         style={{
           maxWidth: '1120px',
           margin: '0 auto',
@@ -240,6 +302,8 @@ const Home = () => {
                 <option value="priceDesc">Precio (mayor a menor)</option>
                 <option value="nameAsc">Nombre (A-Z)</option>
                 <option value="nameDesc">Nombre (Z-A)</option>
+                <option value="startDateAsc">Fecha de inicio (ascendente)</option>
+                <option value="startDateDesc">Fecha de inicio (descendente)</option>
               </select>
             </div>
           </div>
@@ -391,7 +455,8 @@ const Home = () => {
                             lineHeight: 1.1,
                           }}
                         >
-                          {a.price_currency} {Number(a.price).toLocaleString('es-AR')}
+                          {a.price_currency}{' '}
+                          {Number(a.price).toLocaleString('es-AR')}
                         </span>
                       </div>
                     )}

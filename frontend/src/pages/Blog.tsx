@@ -1,6 +1,7 @@
 import { optimizeCloudinaryImage } from "../utils/cloudinary";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import SEO from "../components/SEO";
 import { getPublishedPosts } from "../services/post.service";
 import { Post } from "../types/post";
 
@@ -8,6 +9,7 @@ export default function Blog() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -43,7 +45,31 @@ export default function Blog() {
     );
   }
 
+  const normalizedSearch = searchTerm.trim().toLowerCase();
+
+const visiblePosts = !normalizedSearch
+  ? posts
+  : posts.filter((post) => {
+      const title = post.title?.toLowerCase() ?? "";
+      const description = post.description?.toLowerCase() ?? "";
+      const metaTitle = post.meta_title?.toLowerCase() ?? "";
+      const metaDescription = post.meta_description?.toLowerCase() ?? "";
+
+      return (
+        title.includes(normalizedSearch) ||
+        description.includes(normalizedSearch) ||
+        metaTitle.includes(normalizedSearch) ||
+        metaDescription.includes(normalizedSearch)
+      );
+    });
+
   return (
+  <>
+    <SEO
+      title="Blog informativo | Inside Patagonia"
+      description="Artículos, novedades, consejos útiles e información interesante sobre turismo, excursiones, aventuras y destinos de la Patagonia."
+      canonical="/blog"
+    />
     <main style={{ maxWidth: "1120px", margin: "0 auto", padding: "2rem 1rem" }}>
       <section style={{ marginBottom: "2rem" }}>
         <h1 style={{ fontSize: "2rem", fontWeight: "bold", marginBottom: "0.5rem" }}>
@@ -52,10 +78,24 @@ export default function Blog() {
         <p style={{ color: "#475569" }}>
           Artículos, novedades, consejos utiles e informacion interesante.
         </p>
+        <input
+          type="text"
+          placeholder="Buscar posteos..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style ={{ padding: "0.5rem 0.9rem",
+            borderRadius: "9999px",
+            border: "1px solid #cbd5e1",
+            fontSize: "0.95rem",
+            width: "100%",
+            maxWidth: "360px" }}
+        />
       </section>
 
       {posts.length === 0 ? (
         <p>No hay artículos publicados todavía.</p>
+      ) : visiblePosts.length === 0 ? (
+        <p>No se encontraron artículos con esa búsqueda.</p>
       ) : (
         <section
           style={{
@@ -64,7 +104,7 @@ export default function Blog() {
             gap: "1.5rem"
           }}
         >
-          {posts.map((post) => (
+          {visiblePosts.map((post) => (
             <article
               key={post.post_id}
               style={{
@@ -149,5 +189,6 @@ export default function Blog() {
         </section>
       )}
     </main>
+    </>
   );
 }

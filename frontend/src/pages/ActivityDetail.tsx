@@ -171,9 +171,9 @@ const ActivityDetail = () => {
   const formattedPrice = Number(activity.price).toLocaleString('es-AR');
 
   const allImageSources = [coverImage, ...galleryImages]
-  .filter(Boolean)
-  .map((img) => getImageSrc(img?.url))
-  .filter((src): src is string => Boolean(src));
+    .filter(Boolean)
+    .map((img) => getImageSrc(img?.url))
+    .filter((src): src is string => Boolean(src));
 
   const topImages = allImageSources.slice(0, 3);
   const mainTopImage = topImages[0];
@@ -284,7 +284,6 @@ const ActivityDetail = () => {
                 }}
               >
                 {secondaryTopImages.map((src, index) => {
-
                   return (
                     <div
                       key={src}
@@ -314,8 +313,6 @@ const ActivityDetail = () => {
               </div>
             )}
           </div>
-
-
         </div>
 
         <aside
@@ -475,27 +472,6 @@ const ActivityDetail = () => {
         </aside>
       </div>
 
-      {activity.what_you_will_do && (
-        <section style={{ marginBottom: '3rem' }}>
-          <h2 style={sectionTitleStyle}>¿Qué vas a hacer?</h2>
-          <div
-            style={{
-              ...cardStyle,
-              padding: '1.5rem 1.75rem',
-              fontSize: '1.1rem',
-              lineHeight: 1.8,
-              color: '#1f3c56',
-            }}
-          >
-            {renderFormattedText(activity.what_you_will_do, {
-              fontSize: '1.1rem',
-              lineHeight: 1.8,
-              color: '#1f3c56',
-            })}
-          </div>
-        </section>
-      )}
-
       {(activity.summary || activity.description) && (
         <section style={{ marginBottom: '3rem' }}>
           <div
@@ -535,6 +511,27 @@ const ActivityDetail = () => {
                 })}
               </div>
             )}
+          </div>
+        </section>
+      )}
+
+      {activity.what_you_will_do && (
+        <section style={{ marginBottom: '3rem' }}>
+          <h2 style={sectionTitleStyle}>¿Qué vas a hacer?</h2>
+          <div
+            style={{
+              ...cardStyle,
+              padding: '1.5rem 1.75rem',
+              fontSize: '1.1rem',
+              lineHeight: 1.8,
+              color: '#1f3c56',
+            }}
+          >
+            {renderFormattedText(activity.what_you_will_do, {
+              fontSize: '1.1rem',
+              lineHeight: 1.8,
+              color: '#1f3c56',
+            })}
           </div>
         </section>
       )}

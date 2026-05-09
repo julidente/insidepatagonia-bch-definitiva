@@ -5,7 +5,6 @@
 
 module.exports = {
   async up(queryInterface) {
-    // Hash la contraseña del admin
     // mejor contraseña fija
 
     await queryInterface.bulkInsert('Users', [

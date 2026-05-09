@@ -1,8 +1,11 @@
 import { optimizeCloudinaryImage } from "../utils/cloudinary";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { getPostBySlug } from "../services/post.service";
 import { Post } from "../types/post";
+
+const SITE_URL = "https://insidepatagonia-bch.com.ar";
 
 export default function PostDetail() {
   const { slug } = useParams();
@@ -21,13 +24,6 @@ export default function PostDetail() {
       try {
         const data = await getPostBySlug(slug);
         setPost(data);
-
-        document.title = data.meta_title;
-
-        const metaDescription = document.querySelector('meta[name="description"]');
-        if (metaDescription) {
-          metaDescription.setAttribute("content", data.meta_description);
-        }
       } catch (err) {
         console.error(err);
         setError("No se pudo cargar el artículo.");
@@ -37,10 +33,6 @@ export default function PostDetail() {
     };
 
     fetchPost();
-
-    return () => {
-      document.title = "Inside Patagonia";
-    };
   }, [slug]);
 
   if (loading) {
@@ -54,13 +46,68 @@ export default function PostDetail() {
   if (error || !post) {
     return (
       <main style={{ maxWidth: "900px", margin: "0 auto", padding: "2rem 1rem" }}>
+        <Helmet>
+          <title>Artículo no encontrado | Inside Patagonia</title>
+          <meta name="robots" content="noindex, nofollow" />
+        </Helmet>
+
         <p>{error || "Artículo no encontrado."}</p>
       </main>
     );
   }
 
+  const canonicalUrl = `${SITE_URL}/blog/${post.slug}`;
+  const seoTitle = post.meta_title || `${post.title} | Inside Patagonia`;
+  const seoDescription =
+    post.meta_description || post.description.slice(0, 155);
+
+  const optimizedImage = post.cover_image_url
+    ? optimizeCloudinaryImage(post.cover_image_url)
+    : "";
+
   return (
     <main style={{ maxWidth: "900px", margin: "0 auto", padding: "2rem 1rem" }}>
+      <Helmet>
+        <title>{seoTitle}</title>
+
+        <meta name="description" content={seoDescription} />
+
+        <link rel="canonical" href={canonicalUrl} />
+
+        <meta property="og:title" content={seoTitle} />
+        <meta property="og:description" content={seoDescription} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:type" content="article" />
+
+        {optimizedImage && (
+          <meta property="og:image" content={optimizedImage} />
+        )}
+
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: post.title,
+            description: seoDescription,
+            image: optimizedImage || undefined,
+            author: {
+              "@type": "Organization",
+              name: "Inside Patagonia",
+            },
+            publisher: {
+              "@type": "Organization",
+              name: "Inside Patagonia",
+            },
+            datePublished: post.createdAt,
+            dateModified: post.updatedAt || post.createdAt,
+            mainEntityOfPage: {
+              "@type": "WebPage",
+              "@id": canonicalUrl,
+            },
+          })}
+        </script>
+      </Helmet>
+
       <article>
         <p style={{ color: "#64748b", marginBottom: "0.75rem" }}>
           {new Date(post.createdAt).toLocaleDateString("es-AR")}
@@ -71,7 +118,7 @@ export default function PostDetail() {
             fontSize: "2.2rem",
             lineHeight: 1.2,
             marginBottom: "1.25rem",
-            color: "#0f172a"
+            color: "#0f172a",
           }}
         >
           {post.title}
@@ -79,14 +126,14 @@ export default function PostDetail() {
 
         {post.cover_image_url ? (
           <img
-            src={optimizeCloudinaryImage(post.cover_image_url)}
-            alt={post.title}
+            src={optimizedImage}
+            alt={`Imagen del artículo ${post.title}`}
             style={{
               width: "100%",
               maxHeight: "460px",
               objectFit: "cover",
               borderRadius: "16px",
-              marginBottom: "1.5rem"
+              marginBottom: "1.5rem",
             }}
           />
         ) : (
@@ -100,7 +147,7 @@ export default function PostDetail() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "#64748b"
+              color: "#64748b",
             }}
           >
             Sin imagen
@@ -113,7 +160,7 @@ export default function PostDetail() {
             lineHeight: 1.9,
             color: "#0f172a",
             fontWeight: 500,
-            whiteSpace: "pre-line"
+            whiteSpace: "pre-line",
           }}
         >
           {post.description}

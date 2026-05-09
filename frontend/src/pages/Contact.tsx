@@ -10,21 +10,21 @@ const Contact = () => {
         backgroundRepeat: "no-repeat",
         display: "flex",
         alignItems: "center",
-        padding: "4rem 1.5 rem",
+        padding: "4rem 1.5rem",
       }}
     >
       <div
         style={{
           maxWidth: "1120px",
           width: "100%",
-          margin: "0 auto"
+          margin: "0 auto",
         }}
       >
         <div
           style={{
             maxWidth: "760px",
             color: "white",
-            textShadow: "0 2px 14px rgba(0, 0, 0, 0.45)"
+            textShadow: "0 2px 14px rgba(0, 0, 0, 0.45)",
           }}
         >
           <p
@@ -34,7 +34,7 @@ const Contact = () => {
               textTransform: "uppercase",
               fontWeight: 700,
               marginBottom: "1rem",
-              color: "#dbeafe"
+              color: "#dbeafe",
             }}
           >
             Contacto
@@ -45,7 +45,7 @@ const Contact = () => {
               fontSize: "3rem",
               fontWeight: 800,
               lineHeight: 1.1,
-              marginBottom: "1.5rem"
+              marginBottom: "1.5rem",
             }}
           >
             Estamos para ayudarte
@@ -55,18 +55,19 @@ const Contact = () => {
             style={{
               fontSize: "1.15rem",
               lineHeight: 1.9,
-              marginBottom: "2rem"
+              marginBottom: "2rem",
             }}
           >
             Si tenés dudas sobre nuestras experiencias, excursiones o querés
-            recibir más información, podés comunicarte con nosotros por WhatsApp o seguirnos en nuestras redes sociales.
+            recibir más información, podés comunicarte con nosotros por WhatsApp,
+            email o seguirnos en nuestras redes sociales.
           </p>
 
           <div
             style={{
               display: "grid",
               gap: "1rem",
-              maxWidth: "400px"
+              maxWidth: "400px",
             }}
           >
             <div
@@ -77,7 +78,7 @@ const Contact = () => {
                 border: "1px solid rgba(255,255,255,0.28)",
                 backdropFilter: "blur(4px)",
                 WebkitBackdropFilter: "blur(4px)",
-                boxShadow: "0 8px 24px rgba(0, 0, 0, 0.18)"
+                boxShadow: "0 8px 24px rgba(0, 0, 0, 0.18)",
               }}
             >
               <h2
@@ -85,7 +86,7 @@ const Contact = () => {
                   fontSize: "1.2rem",
                   fontWeight: 700,
                   marginBottom: "0.35rem",
-                  color: "white"
+                  color: "white",
                 }}
               >
                 WhatsApp
@@ -103,7 +104,7 @@ const Contact = () => {
                 border: "1px solid rgba(255,255,255,0.28)",
                 backdropFilter: "blur(4px)",
                 WebkitBackdropFilter: "blur(4px)",
-                boxShadow: "0 8px 24px rgba(0, 0, 0, 0.18)"
+                boxShadow: "0 8px 24px rgba(0, 0, 0, 0.18)",
               }}
             >
               <h2
@@ -111,7 +112,43 @@ const Contact = () => {
                   fontSize: "1.2rem",
                   fontWeight: 700,
                   marginBottom: "0.35rem",
-                  color: "white"
+                  color: "white",
+                }}
+              >
+                Email
+              </h2>
+
+              <p style={{ margin: 0, fontSize: "1.05rem", color: "#f8fafc" }}>
+                <a
+                  href="mailto:inside.patagonia.bch@gmail.com"
+                  style={{
+                    color: "#f8fafc",
+                    textDecoration: "none",
+                    fontWeight: 600,
+                  }}
+                >
+                  inside.patagonia.bch@gmail.com
+                </a>
+              </p>
+            </div>
+
+            <div
+              style={{
+                padding: "1rem 1.2rem",
+                borderRadius: "0.9rem",
+                background: "rgba(255,255,255,0.14)",
+                border: "1px solid rgba(255,255,255,0.28)",
+                backdropFilter: "blur(4px)",
+                WebkitBackdropFilter: "blur(4px)",
+                boxShadow: "0 8px 24px rgba(0, 0, 0, 0.18)",
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: "1.2rem",
+                  fontWeight: 700,
+                  marginBottom: "0.35rem",
+                  color: "white",
                 }}
               >
                 Instagram
@@ -129,7 +166,7 @@ const Contact = () => {
                 border: "1px solid rgba(255,255,255,0.28)",
                 backdropFilter: "blur(4px)",
                 WebkitBackdropFilter: "blur(4px)",
-                boxShadow: "0 8px 24px rgba(0, 0, 0, 0.18)"
+                boxShadow: "0 8px 24px rgba(0, 0, 0, 0.18)",
               }}
             >
               <h2
@@ -137,7 +174,7 @@ const Contact = () => {
                   fontSize: "1.2rem",
                   fontWeight: 700,
                   marginBottom: "0.35rem",
-                  color: "white"
+                  color: "white",
                 }}
               >
                 TikTok
