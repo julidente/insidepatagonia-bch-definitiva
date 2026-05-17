@@ -67,11 +67,20 @@ const About = () => {
                 marginBottom: "1.2rem",
               }}
             >
-              Somos Inside Patagonia, una empresa dedicada a ofrecer experiencias
-              únicas. Creemos que cada viaje debe convertirse en una experiencia
-              inolvidable. Nos dedicamos a realizar excursiones, aventuras y
-              recorridos seleccionados para que descubras paisajes únicos,
-              glaciares, montañas, lagos y toda la magia de la Patagonia.
+              Somos Maria Jose y Alberto, organizadores de experiencias y aventuras en la Patagonia. Trabajamos junto a guías argentinos y chilenos, y a una red de colaboradores que comparten nuestra pasión por la montaña, los viajes y la vida al aire libre.
+              La Patagonia es nuestro lugar en el mundo. Recorremos y operamos en destinos como Bariloche, El Chaltén, Puerto Natales, Pucón, Melipeuco y Caviahue, creando experiencias auténticas para quienes buscan descubrir cada rincón del sur de Argentina y Chile.
+              Creemos en las aventuras compartidas, en el contacto real con la naturaleza y en las experiencias que dejan recuerdos para toda la vida.
+              
+            </p>
+
+            <p
+              style={{
+                fontSize: "1.15rem",
+                lineHeight: 1.9,
+                marginBottom: "1.2rem",
+              }}
+            >
+              Además, desarrollamos proyectos que acompañan nuestra visión: Reto Sur, un grupo de entrenamiento gratuito para clientes en Cipolletti; Ilumina Photo Tours, enfocado en viajes y aventuras fotográficas en la Patagonia; y TreekSur, nuestro servicio exclusivo de transporte, pensado para brindar comodidad, seguridad y conexión entre los distintos destinos.
             </p>
 
             <p
@@ -88,7 +97,7 @@ const About = () => {
 
             <p
               style={{
-                fontSize: "1.15rem",
+                fontSize: "1.5rem",
                 lineHeight: 1.9,
                 margin: 0,
               }}

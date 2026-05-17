@@ -114,6 +114,26 @@ export class PostService {
     }
   }
 
+  async deleteImage(post_id: number): Promise<Post> {
+    const post = await postRepository.getById(post_id);
+    if (!post) throw new Error('Artículo no encontrado');
+
+    if (post.cover_image_public_id) {
+      await cloudinary.uploader.destroy(post.cover_image_public_id).catch(() => {});
+    }
+
+    const updatedPost = await postRepository.update(post_id, {
+      cover_image_url: null,
+      cover_image_public_id: null,
+    });
+
+    if (!updatedPost) {
+      throw new Error('No se pudo eliminar la imagen del artículo');
+    }
+
+    return updatedPost;
+  }
+
   async update(post_id: number, data: UpdatePostDTO): Promise<Post> {
     const existingPost = await postRepository.getById(post_id);
     if (!existingPost) throw new Error('Artículo no encontrado');

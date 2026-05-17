@@ -20,7 +20,7 @@ export async function getPostById(id: number | string): Promise<Post> {
 export async function createPost(data: PostCreate): Promise<Post> {
   return apiClient("posts", {
     method: "POST",
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
   });
 }
 
@@ -30,7 +30,7 @@ export async function updatePost(
 ): Promise<Post> {
   return apiClient(`posts/${id}`, {
     method: "PUT",
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
   });
 }
 
@@ -43,12 +43,18 @@ export async function uploadPostImage(
 
   return apiClient(`posts/${id}/image`, {
     method: "POST",
-    body: formData
+    body: formData,
+  });
+}
+
+export async function deletePostImage(id: number | string): Promise<Post> {
+  return apiClient(`posts/${id}/image`, {
+    method: "DELETE",
   });
 }
 
 export async function deletePost(id: number | string): Promise<void> {
   await apiClient(`posts/${id}`, {
-    method: "DELETE"
+    method: "DELETE",
   });
 }

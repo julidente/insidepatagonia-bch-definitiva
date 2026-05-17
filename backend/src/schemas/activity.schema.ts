@@ -1,6 +1,20 @@
 // src/schemas/activity.schema.ts
 import { z } from 'zod';
 
+const optionalPositiveNumber = (message: string) =>
+  z.preprocess((value) => {
+    if (value === '' || value === null) return null;
+    if (value === undefined) return undefined;
+    return Number(value);
+  }, z.number().positive(message).nullable().optional());
+
+const optionalIntNumber = (min: number, max: number, minMessage: string, maxMessage: string) =>
+  z.preprocess((value) => {
+    if (value === '' || value === null) return null;
+    if (value === undefined) return undefined;
+    return Number(value);
+  }, z.number().int().min(min, minMessage).max(max, maxMessage).nullable().optional());
+
 export const createActivitySchema = z
   .object({
     name: z.string().min(1, 'El nombre es obligatorio'),
@@ -28,12 +42,12 @@ export const createActivitySchema = z
 
     activity_type: z.string().min(1, 'El tipo de actividad es obligatorio'),
 
-    duration_hours: z
-      .number()
-      .int()
-      .min(1, 'La duración mínima es 1 hora')
-      .max(20, 'La duración máxima es 20 horas')
-      .optional(),
+    duration_hours: optionalIntNumber(
+      1,
+      20,
+      'La duración mínima es 1 hora',
+      'La duración máxima es 20 horas',
+    ),
 
     has_additional_cost: z.boolean().optional(),
 
@@ -62,27 +76,27 @@ export const createActivitySchema = z
 
     distance: z.string().max(100, 'La distancia no puede superar 100 caracteres').optional(),
 
-    activity_days: z
-      .number()
-      .int()
-      .min(1, 'Los días de actividad deben ser mínimo 1')
-      .max(10, 'Los días de actividad no pueden superar 10')
-      .optional(),
+    activity_days: optionalIntNumber(
+      1,
+      10,
+      'Los días de actividad deben ser mínimo 1',
+      'Los días de actividad no pueden superar 10',
+    ),
 
-    accommodation_days: z
-      .number()
-      .int()
-      .min(1, 'Los días con alojamiento deben ser mínimo 1')
-      .max(10, 'Los días con alojamiento no pueden superar 10')
-      .optional(),
+    accommodation_days: optionalIntNumber(
+      1,
+      10,
+      'Los días con alojamiento deben ser mínimo 1',
+      'Los días con alojamiento no pueden superar 10',
+    ),
 
     accommodation_type: z.string().optional(),
 
     transport_type: z.string().optional(),
 
-    price: z.number().positive('El precio debe ser un número positivo'),
+    price: optionalPositiveNumber('El precio debe ser un número positivo'),
 
-    price_currency: z.string().min(1, 'La moneda es obligatoria'),
+    price_currency: z.string().nullable().optional(),
 
     price_additional_info: z
       .string()
@@ -92,8 +106,8 @@ export const createActivitySchema = z
     availableDates: z
       .array(
         z.object({
-          start_date: z.string().min(1, 'La fecha de inicio es obligatoria'),
-          end_date: z.string().min(1, 'La fecha de fin es obligatoria'),
+          start_date: z.string().optional(),
+          end_date: z.string().optional(),
         }),
       )
       .optional(),
@@ -132,7 +146,18 @@ export const createActivitySchema = z
         const item = data.availableDates[i];
         if (!item) continue;
 
-        if (item.end_date < item.start_date) {
+        const hasStartDate = Boolean(item.start_date);
+        const hasEndDate = Boolean(item.end_date);
+
+        if ((hasStartDate && !hasEndDate) || (!hasStartDate && hasEndDate)) {
+          ctx.addIssue({
+            code: 'custom',
+            path: ['availableDates', i],
+            message: 'Si cargás una fecha, debés completar inicio y fin',
+          });
+        }
+
+        if (hasStartDate && hasEndDate && item.end_date! < item.start_date!) {
           ctx.addIssue({
             code: 'custom',
             path: ['availableDates', i, 'end_date'],

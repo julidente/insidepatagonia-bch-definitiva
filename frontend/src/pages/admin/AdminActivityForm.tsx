@@ -27,6 +27,7 @@ const AdminActivityForm = ({ mode }: Props) => {
   const [error, setError] = useState<string | null>(null);
   const [hasMultipleMeetingPoints, setHasMultipleMeetingPoints] = useState(false);
   const [hasAdditionalCost, setHasAdditionalCost] = useState(false);
+  const [withoutPrice, setWithoutPrice] = useState(false);
 
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
@@ -48,7 +49,7 @@ const AdminActivityForm = ({ mode }: Props) => {
       meeting_point_1: '',
       meeting_point_2: '',
       activity_type: '',
-      duration_hours: undefined,
+      duration_hours: null,
       has_additional_cost: false,
       additional_cost: '',
       includes: '',
@@ -62,10 +63,10 @@ const AdminActivityForm = ({ mode }: Props) => {
       effort_level: '',
       distance: '',
       activity_days: 1,
-      accommodation_days: undefined,
+      accommodation_days: null,
       accommodation_type: '',
       transport_type: '',
-      price: 0,
+      price: null,
       price_currency: 'ARS',
       price_additional_info: '',
       start_date: '',
@@ -100,7 +101,7 @@ const AdminActivityForm = ({ mode }: Props) => {
             meeting_point_1: data.meeting_point_1 ?? '',
             meeting_point_2: data.meeting_point_2 ?? '',
             activity_type: data.activity_type,
-            duration_hours: data.duration_hours ?? undefined,
+            duration_hours: data.duration_hours ?? null,
             has_additional_cost: data.has_additional_cost ?? false,
             additional_cost: data.additional_cost ?? '',
             includes: data.includes ?? '',
@@ -113,17 +114,18 @@ const AdminActivityForm = ({ mode }: Props) => {
             technical_difficulty: data.technical_difficulty ?? '',
             effort_level: data.effort_level ?? '',
             distance: data.distance ?? '',
-            activity_days: data.activity_days ?? undefined,
-            accommodation_days: data.accommodation_days ?? undefined,
+            activity_days: data.activity_days ?? null,
+            accommodation_days: data.accommodation_days ?? null,
             accommodation_type: data.accommodation_type ?? '',
             transport_type: data.transport_type ?? '',
-            price: Number(data.price),
-            price_currency: data.price_currency,
+            price: data.price === null || data.price === undefined ? null : Number(data.price),
+            price_currency: data.price_currency ?? 'ARS',
             price_additional_info: data.price_additional_info ?? '',
             start_date: firstAvailableDate?.start_date ?? '',
             end_date: firstAvailableDate?.end_date ?? '',
           });
 
+          setWithoutPrice(data.price === null || data.price === undefined);
           setExistingImages(data.images ?? []);
         } catch (err) {
           console.error(err);
@@ -133,6 +135,7 @@ const AdminActivityForm = ({ mode }: Props) => {
         }
       })();
     } else {
+      setWithoutPrice(false);
       setLoading(false);
     }
   }, [mode, id, reset]);
@@ -160,15 +163,37 @@ const AdminActivityForm = ({ mode }: Props) => {
         return;
       }
 
-      if (!data.start_date || !data.end_date) {
-        setError('Debés completar la fecha de inicio y la fecha de fin.');
+      const hasStartDate = Boolean(data.start_date);
+      const hasEndDate = Boolean(data.end_date);
+
+      if ((hasStartDate && !hasEndDate) || (!hasStartDate && hasEndDate)) {
+        setError('Si cargás fechas, debés completar inicio y fin.');
         return;
       }
 
-      if (data.end_date < data.start_date) {
+      if (hasStartDate && hasEndDate && data.end_date! < data.start_date!) {
         setError('La fecha de fin no puede ser menor que la fecha de inicio.');
         return;
       }
+
+      const toOptionalNumber = (value: unknown) => {
+        if (value === '' || value === null || value === undefined) {
+          return null;
+        }
+
+      const numberValue = Number(value);
+
+        if (Number.isNaN(numberValue) || numberValue <= 0) {
+          return null;
+        }
+
+        return numberValue;
+      };
+
+      const cleanPrice = withoutPrice ? null : toOptionalNumber(data.price);
+      const cleanDuration = toOptionalNumber(data.duration_hours);
+      const cleanActivityDays = toOptionalNumber(data.activity_days);
+      const cleanAccommodationDays = toOptionalNumber(data.accommodation_days);
 
       const payload: ActivityCreate = {
         name: data.name,
@@ -179,7 +204,7 @@ const AdminActivityForm = ({ mode }: Props) => {
         meeting_point_1: data.meeting_point_1,
         meeting_point_2: data.has_multiple_meeting_points ? data.meeting_point_2 : '',
         activity_type: data.activity_type,
-        duration_hours: data.duration_hours ? Number(data.duration_hours) : undefined,
+        duration_hours: cleanDuration,
         has_additional_cost: data.has_additional_cost ?? false,
         additional_cost: data.has_additional_cost ? data.additional_cost : '',
         includes: data.includes,
@@ -192,21 +217,22 @@ const AdminActivityForm = ({ mode }: Props) => {
         technical_difficulty: data.technical_difficulty,
         effort_level: data.effort_level,
         distance: data.distance,
-        activity_days: data.activity_days ? Number(data.activity_days) : undefined,
-        accommodation_days: data.accommodation_days
-          ? Number(data.accommodation_days)
-          : undefined,
+        activity_days: cleanActivityDays,
+        accommodation_days: cleanAccommodationDays,
         accommodation_type: data.accommodation_type,
         transport_type: data.transport_type,
-        price: Number(data.price),
-        price_currency: data.price_currency,
+        price: cleanPrice,
+        price_currency: data.price_currency ?? 'ARS',
         price_additional_info: data.price_additional_info,
-        availableDates: [
-          {
-            start_date: data.start_date,
-            end_date: data.end_date,
-          },
-        ],
+        availableDates:
+          hasStartDate && hasEndDate
+            ? [
+                {
+                  start_date: data.start_date!,
+                  end_date: data.end_date!,
+                },
+              ]
+            : [],
       };
 
       let activityId: string | number;
@@ -232,7 +258,12 @@ const AdminActivityForm = ({ mode }: Props) => {
       navigate('/admin/activities');
     } catch (err) {
       console.error(err);
-      setError('Error al guardar la actividad o subir las imágenes.');
+
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Error al guardar la actividad o subir las imágenes.',
+      );
     }
   };
 
@@ -321,19 +352,48 @@ const AdminActivityForm = ({ mode }: Props) => {
             <label>Duración en horas</label>
             <input
               type="number"
-              {...register('duration_hours', { valueAsNumber: true })}
+              {...register('duration_hours', {
+                setValueAs: (value) => value === '' ? null : Number(value),
+              })}
               style={inputStyle}
             />
           </div>
 
           <div>
             <label>Precio</label>
+
+            <label
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                margin: '0.35rem 0',
+                fontSize: '0.9rem',
+                color: '#334155',
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={withoutPrice}
+                onChange={(e) => setWithoutPrice(e.target.checked)}
+              />
+              Sin precio / Próximamente
+            </label>
+
             <input
               type="number"
               step="1"
-              {...register('price', { required: 'El precio es obligatorio', valueAsNumber: true })}
-              style={inputStyle}
+              disabled={withoutPrice}
+              {...register('price', {
+                setValueAs: (value) => value === '' ? null : Number(value),
+              })}
+              style={{
+                ...inputStyle,
+                backgroundColor: withoutPrice ? '#e2e8f0' : 'white',
+                cursor: withoutPrice ? 'not-allowed' : 'text',
+              }}
             />
+
             {errors.price && <p style={errorStyle}>{String(errors.price.message)}</p>}
           </div>
 
@@ -350,21 +410,13 @@ const AdminActivityForm = ({ mode }: Props) => {
         <div style={gridStyle}>
           <div>
             <label>Fecha de inicio</label>
-            <input
-              type="date"
-              {...register('start_date', { required: 'La fecha de inicio es obligatoria' })}
-              style={inputStyle}
-            />
+            <input type="date" {...register('start_date')} style={inputStyle} />
             {errors.start_date && <p style={errorStyle}>{String(errors.start_date.message)}</p>}
           </div>
 
           <div>
             <label>Fecha de fin</label>
-            <input
-              type="date"
-              {...register('end_date', { required: 'La fecha de fin es obligatoria' })}
-              style={inputStyle}
-            />
+            <input type="date" {...register('end_date')} style={inputStyle} />
             {errors.end_date && <p style={errorStyle}>{String(errors.end_date.message)}</p>}
           </div>
         </div>
@@ -521,26 +573,28 @@ const AdminActivityForm = ({ mode }: Props) => {
           </div>
         </div>
 
-      <div style={gridStyle}>
-        <div>
-          <label>Distancia a recorrer</label>
-          <input
-            type="text"
-            {...register('distance')}
-            style={inputStyle}
-            placeholder="Ej: 8 km"
-          />
-        </div>
+        <div style={gridStyle}>
+          <div>
+            <label>Distancia a recorrer</label>
+            <input
+              type="text"
+              {...register('distance')}
+              style={inputStyle}
+              placeholder="Ej: 8 km"
+            />
+          </div>
 
-        <div>
-          <label>Días de actividad</label>
-          <input
-            type="number"
-            {...register('activity_days', { valueAsNumber: true })}
-            style={inputStyle}
-          />
+          <div>
+            <label>Días de actividad</label>
+            <input
+              type="number"
+              {...register('activity_days', {
+                setValueAs: (value) => value === '' ? null : Number(value),
+              })}
+              style={inputStyle}
+            />
+          </div>
         </div>
-      </div>
 
         {mode === 'edit' && existingImages && existingImages.length > 0 && (
           <div>

@@ -83,6 +83,21 @@ class PostController {
     }
   }
 
+  async deleteImage(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+
+      if (!id) {
+        return res.status(400).json({ message: 'ID no proporcionado' });
+      }
+
+      const post = await postService.deleteImage(Number(id));
+      res.json(post);
+    } catch (error: any) {
+      res.status(404).json({ message: error.message });
+    }
+  }
+
   async update(req: Request, res: Response) {
     try {
       const { id } = req.params;

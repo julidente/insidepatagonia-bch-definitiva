@@ -46,7 +46,7 @@ export interface IActivity {
   accommodation_type?: string | null;
   transport_type?: string | null;
 
-  price: number;
-  price_currency: string;
+  price?: number | null;
+  price_currency?: string | null;
   price_additional_info?: string | null;
 }

@@ -107,8 +107,8 @@ export class Activity extends Model {
   public accommodation_type!: string | null;
   public transport_type!: string | null;
 
-  public price!: number;
-  public price_currency!: string;
+  public price!: number | null;
+  public price_currency!: string | null;
   public price_additional_info!: string | null;
 }
 
@@ -249,12 +249,13 @@ Activity.init(
 
     price: {
       type: DataTypes.DECIMAL(10, 2),
-      allowNull: false,
+      allowNull: true,
     },
 
     price_currency: {
       type: DataTypes.STRING(10),
-      allowNull: false,
+      allowNull: true,
+      defaultValue: 'ARS',
     },
 
     price_additional_info: {

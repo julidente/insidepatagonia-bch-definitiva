@@ -32,6 +32,10 @@ router.post(
   (req, res) => PostController.uploadImage(req, res),
 );
 
+router.delete('/:id/image', authenticateJWT, validate(idParamSchema, 'params'), (req, res) =>
+  PostController.deleteImage(req, res),
+);
+
 router.put(
   '/:id',
   authenticateJWT,

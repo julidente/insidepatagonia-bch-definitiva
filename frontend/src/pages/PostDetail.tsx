@@ -37,7 +37,7 @@ export default function PostDetail() {
 
   if (loading) {
     return (
-      <main style={{ maxWidth: "900px", margin: "0 auto", padding: "2rem 1rem" }}>
+      <main className="post-detail-page">
         <p>Cargando artículo...</p>
       </main>
     );
@@ -45,7 +45,7 @@ export default function PostDetail() {
 
   if (error || !post) {
     return (
-      <main style={{ maxWidth: "900px", margin: "0 auto", padding: "2rem 1rem" }}>
+      <main className="post-detail-page">
         <Helmet>
           <title>Artículo no encontrado | Inside Patagonia</title>
           <meta name="robots" content="noindex, nofollow" />
@@ -62,16 +62,15 @@ export default function PostDetail() {
     post.meta_description || post.description.slice(0, 155);
 
   const optimizedImage = post.cover_image_url
-    ? optimizeCloudinaryImage(post.cover_image_url)
+    ? optimizeCloudinaryImage(post.cover_image_url, 1200)
     : "";
 
   return (
-    <main style={{ maxWidth: "900px", margin: "0 auto", padding: "2rem 1rem" }}>
+    <>
       <Helmet>
         <title>{seoTitle}</title>
 
         <meta name="description" content={seoDescription} />
-
         <link rel="canonical" href={canonicalUrl} />
 
         <meta property="og:title" content={seoTitle} />
@@ -79,9 +78,7 @@ export default function PostDetail() {
         <meta property="og:url" content={canonicalUrl} />
         <meta property="og:type" content="article" />
 
-        {optimizedImage && (
-          <meta property="og:image" content={optimizedImage} />
-        )}
+        {optimizedImage && <meta property="og:image" content={optimizedImage} />}
 
         <script type="application/ld+json">
           {JSON.stringify({
@@ -108,64 +105,152 @@ export default function PostDetail() {
         </script>
       </Helmet>
 
-      <article>
-        <p style={{ color: "#64748b", marginBottom: "0.75rem" }}>
-          {new Date(post.createdAt).toLocaleDateString("es-AR")}
-        </p>
+      <style>
+        {`
+          .post-detail-page {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2.3rem 1rem 3.5rem;
+          }
 
-        <h1
-          style={{
-            fontSize: "2.2rem",
-            lineHeight: 1.2,
-            marginBottom: "1.25rem",
-            color: "#0f172a",
-          }}
-        >
-          {post.title}
-        </h1>
+          .post-detail-article {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 18px;
+            padding: 1.6rem;
+            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+          }
 
-        {post.cover_image_url ? (
-          <img
-            src={optimizedImage}
-            alt={`Imagen del artículo ${post.title}`}
-            style={{
-              width: "100%",
-              maxHeight: "460px",
-              objectFit: "cover",
-              borderRadius: "16px",
-              marginBottom: "1.5rem",
-            }}
-          />
-        ) : (
-          <div
-            style={{
-              width: "100%",
-              height: "320px",
-              borderRadius: "16px",
-              marginBottom: "1.5rem",
-              backgroundColor: "#e2e8f0",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "#64748b",
-            }}
-          >
-            Sin imagen
-          </div>
-        )}
+          .post-detail-date {
+            color: #64748b;
+            margin: 0 0 0.75rem;
+            font-size: 0.95rem;
+          }
 
-        <div
-          style={{
-            fontSize: "1.05rem",
-            lineHeight: 1.9,
-            color: "#0f172a",
-            fontWeight: 500,
-            whiteSpace: "pre-line",
-          }}
-        >
-          {post.description}
-        </div>
-      </article>
-    </main>
+          .post-detail-title {
+            font-size: clamp(2rem, 5vw, 2.7rem);
+            line-height: 1.15;
+            margin: 0 0 1.4rem;
+            color: #0f172a;
+            font-weight: 800;
+            text-wrap: balance;
+          }
+
+          .post-detail-cover {
+            width: 100%;
+            max-height: 460px;
+            object-fit: cover;
+            border-radius: 16px;
+            margin-bottom: 1.5rem;
+            display: block;
+          }
+
+          .post-detail-placeholder {
+            width: 100%;
+            height: 320px;
+            border-radius: 16px;
+            margin-bottom: 1.5rem;
+            background-color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+          }
+
+          .post-detail-content {
+            font-size: 1.05rem;
+            line-height: 1.9;
+            color: #0f172a;
+            font-weight: 500;
+            white-space: pre-line;
+          }
+
+          @media (max-width: 768px) {
+            .post-detail-page {
+              padding: 1.7rem 1rem 2.8rem;
+            }
+
+            .post-detail-article {
+              padding: 1.25rem;
+              border-radius: 16px;
+            }
+
+            .post-detail-title {
+              text-align: center;
+            }
+
+            .post-detail-date {
+              text-align: center;
+            }
+
+            .post-detail-cover {
+              max-height: 360px;
+              border-radius: 14px;
+            }
+
+            .post-detail-placeholder {
+              height: 260px;
+              border-radius: 14px;
+            }
+
+            .post-detail-content {
+              font-size: 1rem;
+              line-height: 1.8;
+            }
+          }
+
+          @media (max-width: 480px) {
+            .post-detail-page {
+              padding: 1.3rem 0.85rem 2.4rem;
+            }
+
+            .post-detail-article {
+              padding: 1rem;
+              border-radius: 14px;
+            }
+
+            .post-detail-cover {
+              max-height: 260px;
+              border-radius: 12px;
+              margin-bottom: 1.25rem;
+            }
+
+            .post-detail-placeholder {
+              height: 220px;
+              border-radius: 12px;
+              margin-bottom: 1.25rem;
+            }
+
+            .post-detail-content {
+              font-size: 0.97rem;
+              line-height: 1.75;
+            }
+          }
+        `}
+      </style>
+
+      <main className="post-detail-page">
+        <article className="post-detail-article">
+          <p className="post-detail-date">
+            {new Date(post.createdAt).toLocaleDateString("es-AR")}
+          </p>
+
+          <h1 className="post-detail-title">{post.title}</h1>
+
+          {post.cover_image_url ? (
+            <img
+              src={optimizedImage}
+              alt={`Imagen del artículo ${post.title}`}
+              className="post-detail-cover"
+              loading="lazy"
+            />
+          ) : (
+            <div className="post-detail-placeholder">Sin imagen</div>
+          )}
+
+          <div className="post-detail-content">{post.description}</div>
+        </article>
+      </main>
+    </>
   );
 }

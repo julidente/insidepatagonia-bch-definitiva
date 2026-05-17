@@ -50,8 +50,8 @@ export interface Activity {
   accommodation_type?: string | null;
   transport_type?: string | null;
 
-  price: number | string;
-  price_currency: string;
+  price?: number | string | null;
+  price_currency?: string | null;
   price_additional_info?: string | null;
 
   images?: ActivityImage[] | null;
@@ -69,7 +69,7 @@ export interface ActivityCreate {
   meeting_point_2?: string;
 
   activity_type: string;
-  duration_hours?: number;
+  duration_hours?: number | null;
 
   has_additional_cost?: boolean;
   additional_cost?: string;
@@ -88,14 +88,14 @@ export interface ActivityCreate {
 
   distance?: string;
 
-  activity_days?: number;
-  accommodation_days?: number;
+  activity_days?: number | null;
+  accommodation_days?: number | null;
 
   accommodation_type?: string;
   transport_type?: string;
 
-  price: number;
-  price_currency: string;
+  price?: number | null;
+  price_currency?: string | null;
   price_additional_info?: string;
 
   availableDates?: {

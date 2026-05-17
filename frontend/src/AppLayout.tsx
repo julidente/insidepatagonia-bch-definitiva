@@ -1,19 +1,19 @@
+import { useState } from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { useAuthContext } from "./context/AuthContext";
-import { FaMapMarkerAlt } from "react-icons/fa";
+import { FaBars, FaMapMarkerAlt, FaTimes } from "react-icons/fa";
 
 const AppLayout = () => {
   const { isAuthenticated, logout, user } = useAuthContext();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
 
   const footerLinkStyle: React.CSSProperties = {
     color: "white",
     textDecoration: "none",
-    display: "flex",
-    alignItems: "center",
-    gap: "0.5rem",
-  };
-
-  const footerTextStyle: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
     gap: "0.5rem",
@@ -48,143 +48,112 @@ const AppLayout = () => {
         backgroundColor: "#f8fafc",
       }}
     >
-      <header style={{ backgroundColor: "#0c4a6e", color: "white" }}>
-        <div
-          style={{
-            maxWidth: "1120px",
-            margin: "0 auto",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "0.75rem 1rem",
-          }}
-        >
-          <Link
-            to="/"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.6rem",
-              fontWeight: "bold",
-              fontSize: "1.25rem",
-              color: "white",
-              textDecoration: "none",
-            }}
-          >
+      <header className="site-header">
+        <div className="site-header__inner">
+          <Link to="/" onClick={closeMenu} className="site-header__logo">
             <img
               src="/logos/logo inside.png"
               alt="Logo Inside Patagonia"
-              style={{
-                width: "42px",
-                height: "42px",
-                objectFit: "contain",
-              }}
+              className="site-header__logo-img"
             />
 
             <span>INSIDE Patagonia</span>
           </Link>
 
+          <button
+            type="button"
+            className="site-header__menu-button"
+            onClick={() => setIsMenuOpen((prev) => !prev)}
+            aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"}
+            aria-expanded={isMenuOpen}
+          >
+            {isMenuOpen ? <FaTimes /> : <FaBars />}
+          </button>
+
           <nav
-            style={{
-              display: "flex",
-              gap: "1rem",
-              fontSize: "1rem",
-              alignItems: "center",
-            }}
+            className={`site-header__nav ${
+              isMenuOpen ? "site-header__nav--open" : ""
+            }`}
           >
             <NavLink
               to="/#experiencias"
               end
-              style={({ isActive }) => ({
-                color: "white",
-                textDecoration: isActive ? "underline" : "none",
-                fontWeight: isActive ? 600 : 400,
-              })}
+              onClick={closeMenu}
+              className={({ isActive }) =>
+                isActive
+                  ? "site-header__nav-link site-header__nav-link--active"
+                  : "site-header__nav-link"
+              }
             >
-              Proximas Actividades
+              Próximas Actividades
             </NavLink>
 
             <NavLink
               to="/about"
-              style={({ isActive }) => ({
-                color: "white",
-                textDecoration: isActive ? "underline" : "none",
-                fontWeight: isActive ? 600 : 400,
-              })}
+              onClick={closeMenu}
+              className={({ isActive }) =>
+                isActive
+                  ? "site-header__nav-link site-header__nav-link--active"
+                  : "site-header__nav-link"
+              }
             >
               Sobre nosotros
             </NavLink>
 
             <NavLink
               to="/contact"
-              style={({ isActive }) => ({
-                color: "white",
-                textDecoration: isActive ? "underline" : "none",
-                fontWeight: isActive ? 600 : 400,
-              })}
+              onClick={closeMenu}
+              className={({ isActive }) =>
+                isActive
+                  ? "site-header__nav-link site-header__nav-link--active"
+                  : "site-header__nav-link"
+              }
             >
               Contacto
             </NavLink>
 
             <NavLink
               to="/blog"
-              style={({ isActive }) => ({
-                color: "white",
-                textDecoration: isActive ? "underline" : "none",
-                fontWeight: isActive ? 600 : 400,
-              })}
+              onClick={closeMenu}
+              className={({ isActive }) =>
+                isActive
+                  ? "site-header__nav-link site-header__nav-link--active"
+                  : "site-header__nav-link"
+              }
             >
               Blog informativo
             </NavLink>
 
-            <NavLink
-              to="/admin"
-              style={({ isActive }) => ({
-                color: "white",
-                textDecoration: isActive ? "underline" : "none",
-                fontWeight: isActive ? 600 : 400,
-              })}
-            >
-              Panel admin
-            </NavLink>
-
-            {!isAuthenticated ? (
-              <Link
-                to="/login"
-                style={{
-                  marginLeft: "0.5rem",
-                  padding: "0.35rem 0.9rem",
-                  borderRadius: "9999px",
-                  border: "1px solid rgba(255,255,255,0.6)",
-                  fontSize: "0.8rem",
-                  color: "white",
-                  textDecoration: "none",
-                }}
-              >
-                Ingresar
-              </Link>
-            ) : (
+            {isAuthenticated && (
               <>
-                <span style={{ fontSize: "0.8rem", opacity: 0.85 }}>
-                  {user?.email ?? "Admin"}
-                </span>
-
-                <button
-                  type="button"
-                  onClick={logout}
-                  style={{
-                    marginLeft: "0.5rem",
-                    padding: "0.35rem 0.9rem",
-                    borderRadius: "9999px",
-                    border: "1px solid rgba(255,255,255,0.6)",
-                    background: "transparent",
-                    color: "white",
-                    fontSize: "0.8rem",
-                    cursor: "pointer",
-                  }}
+                <NavLink
+                  to="/admin"
+                  onClick={closeMenu}
+                  className={({ isActive }) =>
+                    isActive
+                      ? "site-header__nav-link site-header__nav-link--active"
+                      : "site-header__nav-link"
+                  }
                 >
-                  Salir
-                </button>
+                  Panel admin
+                </NavLink>
+
+                <div className="site-header__admin-box">
+                  <span className="site-header__user">
+                    {user?.email ?? "Admin"}
+                  </span>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      logout();
+                      closeMenu();
+                    }}
+                    className="site-header__logout"
+                  >
+                    Salir
+                  </button>
+                </div>
               </>
             )}
           </nav>
@@ -204,32 +173,16 @@ const AppLayout = () => {
           flexShrink: 0,
         }}
       >
-        <div
-          style={{
-            maxWidth: "1300px",
-            margin: "0 auto",
-            padding: "1.2rem 1rem",
-            display: "grid",
-            gridTemplateColumns: "1.2fr 1fr 1.6fr",
-            gap: "2rem",
-            alignItems: "center",
-          }}
-        >
+        <div className="site-footer__content">
           {/* Columna izquierda */}
           <div>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.8rem",
-                marginBottom: "0.7rem",
-              }}
-            >
+            <div className="site-footer__brand-logos">
               <img
                 src="/logos/logo inside.png"
                 alt="Inside Patagonia"
+                className="site-footer__main-logo"
                 style={{
-                  width: "90px",
+                  width: "105px",
                   height: "90px",
                   objectFit: "contain",
                 }}
@@ -244,8 +197,9 @@ const AppLayout = () => {
                 <img
                   src="/logos/logo retosur.png"
                   alt="RetoSur"
+                  className="site-footer__partner-main-logo"
                   style={{
-                    width: "120px",
+                    width: "100px",
                     maxHeight: "90px",
                     objectFit: "contain",
                     display: "block",
@@ -262,8 +216,9 @@ const AppLayout = () => {
                 <img
                   src="/logos/LOGO ILUMINA NEW.png"
                   alt="Ilumina Photo Tours"
+                  className="site-footer__partner-main-logo"
                   style={{
-                    width: "120px",
+                    width: "100px",
                     maxHeight: "90px",
                     objectFit: "contain",
                     display: "block",
@@ -277,23 +232,33 @@ const AppLayout = () => {
                 display: "grid",
                 gap: "0.45rem",
                 fontSize: "0.78rem",
-                lineHeight: 1.4,
+                lineHeight: 2,
                 color: "rgba(255,255,255,0.9)",
               }}
             >
-              <span style={footerTextStyle}>
+              <a
+                href="https://maps.app.goo.gl/Mz65xWCQgmyGndrh8"
+                target="_blank"
+                rel="noreferrer"
+                style={footerLinkStyle}
+              >
                 <FaMapMarkerAlt
                   style={{ ...footerIconStyle, color: "#ef4444" }}
                 />
                 Av. General Arias 2470, Bahía Blanca
-              </span>
+              </a>
 
-              <span style={footerTextStyle}>
+              <a
+                href="https://maps.app.goo.gl/anLWaqNk9AMBW33q9"
+                target="_blank"
+                rel="noreferrer"
+                style={footerLinkStyle}
+              >
                 <FaMapMarkerAlt
                   style={{ ...footerIconStyle, color: "#ef4444" }}
                 />
                 Le Esmeralda 555, Cipolletti
-              </span>
+              </a>
             </div>
           </div>
 
@@ -377,7 +342,7 @@ const AppLayout = () => {
             </div>
           </div>
 
-          {/* Columna derecha: colaboradores */}
+          {/* Columna derecha */}
           <div>
             <h3
               style={{
@@ -396,85 +361,117 @@ const AppLayout = () => {
             <div
               style={{
                 display: "flex",
-                justifyContent: "flex-end",
+                flexDirection: "column",
+                gap: "0.9rem",
                 alignItems: "center",
-                gap: "1.1rem",
-                flexWrap: "wrap",
               }}
             >
-              <a
-                href="https://posadasanantonio.com.ar"
-                target="_blank"
-                rel="noreferrer"
-                title="Posada San Antonio"
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "1.5rem",
+                  flexWrap: "wrap",
+                }}
               >
-                <img
-                  src="/logos/san antonio.png"
-                  alt="Posada San Antonio"
-                  style={{
-                    ...collaboratorLogoStyle,
-                    height: "90px",
-                  }}
-                />
-              </a>
+                <a
+                  href="https://posadasanantonio.com.ar"
+                  target="_blank"
+                  rel="noreferrer"
+                  title="Posada San Antonio"
+                >
+                  <img
+                    src="/logos/san antonio.png"
+                    alt="Posada San Antonio"
+                    style={{
+                      ...collaboratorLogoStyle,
+                      height: "90px",
+                    }}
+                  />
+                </a>
 
-              <a
-                href="https://www.instagram.com/lagunastudioscalafate"
-                target="_blank"
-                rel="noreferrer"
-                title="Laguna Studios"
-              >
-                <img
-                  src="/logos/LAGUNA.png"
-                  alt="Laguna Studios"
-                  style={collaboratorLogoStyle}
-                />
-              </a>
+                <a
+                  href="https://www.instagram.com/treeksur/"
+                  target="_blank"
+                  rel="noreferrer"
+                  title="TreekSur"
+                >
+                  <img
+                    src="/logos/logos treeksur.png"
+                    alt="TreekSur"
+                    style={collaboratorLogoStyle}
+                  />
+                </a>
 
-              <a
-                href="https://www.instagram.com/lospionerosmco"
-                target="_blank"
-                rel="noreferrer"
-                title="Los Pioneros"
-              >
-                <img
-                  src="/logos/PIONEROS.png"
-                  alt="Los Pioneros"
-                  style={collaboratorLogoStyle}
-                />
-              </a>
+                <a
+                  href="https://www.instagram.com/bunker.ronco"
+                  target="_blank"
+                  rel="noreferrer"
+                  title="Bunker Ronco Bariloche"
+                >
+                  <img
+                    src="/logos/logo bunker ronco.png"
+                    alt="Bunker Ronco Bariloche"
+                    style={{
+                      ...collaboratorLogoStyle,
+                      maxWidth: "80px",
+                    }}
+                  />
+                </a>
+              </div>
 
-              <a
-                href="https://campingpehoe.com"
-                target="_blank"
-                rel="noreferrer"
-                title="Camping Pehoé"
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "1.5rem",
+                  flexWrap: "wrap",
+                }}
               >
-                <img
-                  src="/logos/PEHOE.png"
-                  alt="Camping Pehoé"
-                  style={{
-                    ...collaboratorLogoStyle,
-                    maxWidth: "80px",
-                  }}
-                />
-              </a>
+                <a
+                  href="https://www.instagram.com/lagunastudioscalafate"
+                  target="_blank"
+                  rel="noreferrer"
+                  title="Laguna Studios"
+                >
+                  <img
+                    src="/logos/LAGUNA.png"
+                    alt="Laguna Studios"
+                    style={collaboratorLogoStyle}
+                  />
+                </a>
 
-              <a
-                href="https://www.instagram.com/bunker.ronco"
-                target="_blank"
-                rel="noreferrer"
-                title="Bunker Ronco Bariloche"
-              >
-                <img
-                  src="/logos/logo bunker ronco.png"
-                  alt="Bunker Ronco Bariloche"
-                  style={{
-                    ...collaboratorLogoStyle,
-                    maxWidth: "80px",
-                  }}
-                />
-              </a>
+                <a
+                  href="https://www.instagram.com/lospionerosmco"
+                  target="_blank"
+                  rel="noreferrer"
+                  title="Los Pioneros"
+                >
+                  <img
+                    src="/logos/PIONEROS.png"
+                    alt="Los Pioneros"
+                    style={collaboratorLogoStyle}
+                  />
+                </a>
+
+                <a
+                  href="https://campingpehoe.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  title="Camping Pehoé"
+                >
+                  <img
+                    src="/logos/PEHOE.png"
+                    alt="Camping Pehoé"
+                    style={{
+                      ...collaboratorLogoStyle,
+                      maxWidth: "80px",
+                    }}
+                  />
+                </a>
+              </div>
             </div>
           </div>
         </div>

@@ -8,7 +8,14 @@ import type { Activity } from '../types/activity';
 const API_URL = import.meta.env.VITE_API_URL;
 const API_ORIGIN = API_URL.replace(/\/api\/?$/, '');
 
-type SortValue = '' | 'priceAsc' | 'priceDesc' | 'nameAsc' | 'nameDesc'| 'startDateAsc' | 'startDateDesc';
+type SortValue =
+  | ''
+  | 'priceAsc'
+  | 'priceDesc'
+  | 'nameAsc'
+  | 'nameDesc'
+  | 'startDateAsc'
+  | 'startDateDesc';
 
 const Home = () => {
   const [activities, setActivities] = useState<Activity[]>([]);
@@ -54,15 +61,15 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-  if (location.hash !== '#experiencias') return;
+    if (location.hash !== '#experiencias') return;
 
-  const timeoutId = window.setTimeout(() => {
-    const section = document.getElementById('experiencias');
-    section?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 100);
+    const timeoutId = window.setTimeout(() => {
+      const section = document.getElementById('experiencias');
+      section?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
 
-  return () => window.clearTimeout(timeoutId);
-}, [location]);
+    return () => window.clearTimeout(timeoutId);
+  }, [location]);
 
   const handleSortChange = (value: SortValue) => {
     setSort(value);
@@ -94,8 +101,46 @@ const Home = () => {
         description="Descubre las mejores aventuras, actividades y experiencias en la Patagonia con Inside Patagonia. Excursiones seleccionadas, salidas inolvidables."
         canonical="/"
       />
+
       <style>
         {`
+          .identity-title-section {
+            width: 100%;
+            min-height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 3rem 1.5rem;
+            box-sizing: border-box;
+            background:
+              linear-gradient(
+                135deg,
+                rgba(7, 55, 79, 0.96),
+                rgba(12, 74, 110, 0.9),
+                rgba(55, 65, 81, 0.82)
+              ),
+              url('/portada.png');
+            background-size: cover;
+            background-position: center;
+            color: white;
+          }
+
+          .identity-title-content {
+            max-width: 1200px;
+            margin: 0 auto;
+          }
+
+          .identity-title-content h1 {
+            margin: 0;
+            color: white;
+            font-size: clamp(1.8rem, 3.5vw, 3.6rem);
+            line-height: 1.05;
+            font-weight: 300;
+            letter-spacing: 0.04em;
+            text-wrap: balance;
+          }
+
           .identity-section {
             width: 100%;
             display: grid;
@@ -109,6 +154,73 @@ const Home = () => {
             height: auto;
             object-fit: contain;
             display: block;
+          }
+
+          .home-hero-adventure {
+            background-image:
+              linear-gradient(to bottom, rgba(15,23,42,0.7), rgba(15,23,42,0.85)),
+              url('https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&w=1600');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 3.5rem 1rem 3rem;
+            text-align: center;
+          }
+
+          .home-hero-adventure h1 {
+            font-size: clamp(1.75rem, 5vw, 2.1rem);
+          }
+
+          .home-experiences-section {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 2rem 1rem 3rem;
+          }
+
+          .home-experiences-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+          }
+
+          .home-filters {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+          }
+
+          .home-search-input {
+            padding: 0.5rem 0.8rem;
+            border-radius: 9999px;
+            border: 1px solid #cbd5f5;
+            font-size: 0.85rem;
+            min-width: 220px;
+          }
+
+          .home-sort-box {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+          }
+
+          .home-sort-select {
+            padding: 0.5rem 0.8rem;
+            border-radius: 9999px;
+            border: 1px solid #cbd5f5;
+            font-size: 0.85rem;
+            background-color: white;
+            cursor: pointer;
+          }
+
+          .activities-grid {
+            display: grid;
+            gap: 1.75rem;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
           }
 
           .activity-card {
@@ -129,6 +241,13 @@ const Home = () => {
             box-shadow: 0 24px 40px -16px rgba(15, 23, 42, 0.28);
           }
 
+          .activity-card-cover {
+            position: relative;
+            height: 240px;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #1d4ed8, #0ea5e9);
+          }
+
           .activity-card-image {
             transition: transform 0.35s ease;
           }
@@ -147,37 +266,109 @@ const Home = () => {
               object-fit: contain;
             }
           }
+
+          @media (max-width: 768px) {
+            .identity-title-section {
+              min-height: 140px;
+              padding: 2.2rem 1rem;
+            }
+
+            .identity-title-content h1 {
+              font-size: 2rem;
+              line-height: 1.15;
+            }
+
+            .home-hero-adventure {
+              padding: 2.6rem 1rem 2.4rem;
+            }
+
+            .home-experiences-section {
+              padding: 1.7rem 1rem 2.6rem;
+            }
+
+            .home-experiences-header {
+              flex-direction: column;
+              align-items: stretch;
+            }
+
+            .home-experiences-header h2,
+            .home-experiences-header p {
+              text-align: center;
+            }
+
+            .home-filters {
+              width: 100%;
+              flex-direction: column;
+              align-items: stretch;
+            }
+
+            .home-search-input {
+              width: 100%;
+              min-width: 0;
+            }
+
+            .home-sort-box {
+              width: 100%;
+              flex-direction: column;
+              align-items: stretch;
+              text-align: center;
+            }
+
+            .home-sort-select {
+              width: 100%;
+            }
+
+            .activities-grid {
+              grid-template-columns: 1fr;
+              gap: 1.4rem;
+            }
+
+            .activity-card-cover {
+              height: 210px;
+            }
+
+            .activity-card h3 {
+              font-size: 1.3rem !important;
+            }
+          }
+
+          @media (max-width: 480px) {
+            .identity-title-content h1 {
+              font-size: 1.55rem;
+            }
+
+            .home-hero-adventure {
+              padding: 2.2rem 1rem;
+            }
+
+            .home-hero-adventure p {
+              font-size: 0.9rem !important;
+            }
+
+            .activity-card-cover {
+              height: 190px;
+            }
+
+            .activity-card {
+              border-radius: 0.85rem;
+            }
+          }
         `}
       </style>
 
-      <section className="identity-section">
-        <img
-          src="/home/3.PNG"
-          alt="Aventura - Inside Patagonia"
-        />
-
-        <img
-          src="/home/2.PNG"
-          alt="Movimiento - RetoSur"
-        />
-
-        <img
-          src="/home/1.PNG"
-          alt="Mirada - Ilumina"
-        />
+      <section className="identity-title-section">
+        <div className="identity-title-content">
+          <h1>TRES PROPUESTAS, UNA MISMA IDENTIDAD</h1>
+        </div>
       </section>
 
-      <section
-        style={{
-          backgroundImage:
-            "linear-gradient(to bottom, rgba(15,23,42,0.7), rgba(15,23,42,0.85)), url('https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&w=1600')",
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          color: 'white',
-          padding: '3.5rem 1rem 3rem',
-          textAlign: 'center',
-        }}
-      >
+      <section className="identity-section">
+        <img src="/home/3.PNG" alt="Aventura - Inside Patagonia" />
+        <img src="/home/2.PNG" alt="Movimiento - RetoSur" />
+        <img src="/home/1.PNG" alt="Mirada - Ilumina" />
+      </section>
+
+      <section className="home-hero-adventure">
         <div
           style={{
             maxWidth: '960px',
@@ -198,7 +389,6 @@ const Home = () => {
 
           <h1
             style={{
-              fontSize: '2.1rem',
               fontWeight: 700,
               marginBottom: '0.75rem',
             }}
@@ -221,24 +411,8 @@ const Home = () => {
         </div>
       </section>
 
-      <section
-        id="experiencias"
-        style={{
-          maxWidth: '1120px',
-          margin: '0 auto',
-          padding: '2rem 1rem 3rem',
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '1rem',
-            marginBottom: '1.5rem',
-          }}
-        >
+      <section id="experiencias" className="home-experiences-section">
+        <div className="home-experiences-header">
           <div>
             <h2
               style={{
@@ -249,53 +423,28 @@ const Home = () => {
             >
               Todas las actividades
             </h2>
+
             <p style={{ fontSize: '0.9rem', color: '#64748b' }}>
               Elegí entre las excursiones más populares de la región.
             </p>
           </div>
 
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              alignItems: 'center',
-              gap: '0.75rem',
-              fontSize: '0.9rem',
-            }}
-          >
+          <div className="home-filters">
             <input
               type="text"
               placeholder="Buscar por nombre, ubicación o tipo..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              style={{
-                padding: '0.35rem 0.6rem',
-                borderRadius: '9999px',
-                border: '1px solid #cbd5f5',
-                fontSize: '0.85rem',
-                minWidth: '220px',
-              }}
+              className="home-search-input"
             />
 
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-              }}
-            >
+            <div className="home-sort-box">
               <span style={{ color: '#475569' }}>Ordenar por:</span>
+
               <select
                 value={sort}
                 onChange={(e) => handleSortChange(e.target.value as SortValue)}
-                style={{
-                  padding: '0.35rem 0.6rem',
-                  borderRadius: '9999px',
-                  border: '1px solid #cbd5f5',
-                  fontSize: '0.85rem',
-                  backgroundColor: 'white',
-                  cursor: 'pointer',
-                }}
+                className="home-sort-select"
               >
                 <option value="">Sin orden</option>
                 <option value="priceAsc">Precio (menor a mayor)</option>
@@ -313,25 +462,23 @@ const Home = () => {
         {error && <p style={{ color: 'crimson' }}>{error}</p>}
 
         {!loading && !error && (
-          <div
-            style={{
-              display: 'grid',
-              gap: '1.75rem',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(270px, 1fr))',
-            }}
-          >
+          <div className="activities-grid">
             {visibleActivities.map((a) => {
-              const coverImage =
-                a.images?.find((img) => img.is_cover) ?? a.images?.[0] ?? null;
-
+              const coverImage = a.images?.find((img) => img.is_cover) ?? null;
               const rawCover = coverImage?.url ?? null;
 
               const cover =
                 rawCover && !rawCover.startsWith('http')
                   ? `${API_ORIGIN}${rawCover}`
                   : rawCover
-                    ? optimizeCloudinaryImage(rawCover, 800)
+                    ? optimizeCloudinaryImage(rawCover, 600)
                     : rawCover;
+
+              const hasPrice =
+                a.price !== null &&
+                a.price !== undefined &&
+                a.price !== '' &&
+                Number.isFinite(Number(a.price));
 
               return (
                 <Link
@@ -339,15 +486,7 @@ const Home = () => {
                   to={`/destinos/${a.activity_id}`}
                   className="activity-card"
                 >
-                  <div
-                    style={{
-                      position: 'relative',
-                      height: '240px',
-                      overflow: 'hidden',
-                      background:
-                        'linear-gradient(to bottom, #1d4ed8, #0ea5e9)',
-                    }}
-                  >
+                  <div className="activity-card-cover">
                     <div
                       className="activity-card-image"
                       style={{
@@ -427,39 +566,41 @@ const Home = () => {
                       </p>
                     )}
 
-                    {a.price && (
-                      <div
+                    <div
+                      style={{
+                        marginTop: '0.25rem',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.15rem',
+                      }}
+                    >
+                      <span
                         style={{
-                          marginTop: '0.25rem',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          gap: '0.15rem',
+                          fontSize: '0.8rem',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.08em',
+                          color: '#94a3b8',
+                          fontWeight: 700,
                         }}
                       >
-                        <span
-                          style={{
-                            fontSize: '0.8rem',
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.08em',
-                            color: '#94a3b8',
-                            fontWeight: 700,
-                          }}
-                        >
-                          Desde
-                        </span>
-                        <span
-                          style={{
-                            fontSize: '1.7rem',
-                            fontWeight: 800,
-                            color: '#25608f',
-                            lineHeight: 1.1,
-                          }}
-                        >
-                          {a.price_currency}{' '}
-                          {Number(a.price).toLocaleString('es-AR')}
-                        </span>
-                      </div>
-                    )}
+                        {hasPrice ? 'Desde' : 'Precio'}
+                      </span>
+
+                      <span
+                        style={{
+                          fontSize: '1.7rem',
+                          fontWeight: 800,
+                          color: '#25608f',
+                          lineHeight: 1.1,
+                        }}
+                      >
+                        {hasPrice
+                          ? `${a.price_currency ?? 'ARS'} ${Number(
+                              a.price
+                            ).toLocaleString('es-AR')}`
+                          : 'Próximamente'}
+                      </span>
+                    </div>
 
                     <span
                       style={{
