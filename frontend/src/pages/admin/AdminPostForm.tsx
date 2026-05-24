@@ -8,6 +8,7 @@ import {
   uploadPostImage,
 } from "../../services/post.service";
 import type { Post } from "../../types/post";
+import { getImageUrl } from "../../utils/imageUrl";
 
 type AdminPostFormProps = {
   mode: "create" | "edit";
@@ -431,7 +432,7 @@ export default function AdminPostForm({ mode }: AdminPostFormProps) {
 
               <div className="admin-post-form-image-row">
                 <img
-                  src={currentPost.cover_image_url}
+                  src={getImageUrl(currentPost.cover_image_url)}
                   alt={currentPost.title}
                   className="admin-post-form-image"
                 />

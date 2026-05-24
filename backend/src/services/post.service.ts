@@ -1,8 +1,8 @@
 import fs from 'fs/promises';
-import cloudinary from '../config/cloudinary';
 import { CreatePostDTO, UpdatePostDTO } from '../dtos/post.dto';
 import { Post } from '../models/entity/post.entity';
 import postRepository from '../repositories/post.repository';
+import { deletePostImageFile, savePostImageLocally } from '../utils/postImageStorage';
 
 export class PostService {
   private generateSlug(title: string): string {
@@ -90,21 +90,23 @@ export class PostService {
     const post = await postRepository.getById(post_id);
     if (!post) throw new Error('Artículo no encontrado');
 
-    const result = await cloudinary.uploader.upload(filePath, {
-      folder: 'posts',
-    });
-
     try {
-      if (post.cover_image_public_id) {
-        await cloudinary.uploader.destroy(post.cover_image_public_id).catch(() => {});
+      const savedImage = await savePostImageLocally(filePath);
+
+      if (post.cover_image_url || post.cover_image_public_id) {
+        await deletePostImageFile({
+          url: post.cover_image_url,
+          public_id: post.cover_image_public_id,
+        });
       }
 
       const updatedPost = await postRepository.update(post_id, {
-        cover_image_url: result.secure_url,
-        cover_image_public_id: result.public_id,
+        cover_image_url: savedImage.url,
+        cover_image_public_id: savedImage.public_id,
       });
 
       if (!updatedPost) {
+        await deletePostImageFile(savedImage);
         throw new Error('No se pudo actualizar la imagen del artículo');
       }
 
@@ -118,8 +120,11 @@ export class PostService {
     const post = await postRepository.getById(post_id);
     if (!post) throw new Error('Artículo no encontrado');
 
-    if (post.cover_image_public_id) {
-      await cloudinary.uploader.destroy(post.cover_image_public_id).catch(() => {});
+    if (post.cover_image_url || post.cover_image_public_id) {
+      await deletePostImageFile({
+        url: post.cover_image_url,
+        public_id: post.cover_image_public_id,
+      });
     }
 
     const updatedPost = await postRepository.update(post_id, {
@@ -165,8 +170,11 @@ export class PostService {
     const post = await postRepository.getById(post_id);
     if (!post) throw new Error('Artículo no encontrado');
 
-    if (post.cover_image_public_id) {
-      await cloudinary.uploader.destroy(post.cover_image_public_id).catch(() => {});
+    if (post.cover_image_url || post.cover_image_public_id) {
+      await deletePostImageFile({
+        url: post.cover_image_url,
+        public_id: post.cover_image_public_id,
+      });
     }
 
     const deleted = await postRepository.delete(post_id);

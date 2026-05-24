@@ -349,7 +349,7 @@ const AdminActivityForm = ({ mode }: Props) => {
 
         <div style={gridStyle}>
           <div>
-            <label>Duración en horas</label>
+            <label>Duración en horas (no obligatorio)</label>
             <input
               type="number"
               {...register('duration_hours', {
@@ -575,7 +575,7 @@ const AdminActivityForm = ({ mode }: Props) => {
 
         <div style={gridStyle}>
           <div>
-            <label>Distancia a recorrer</label>
+            <label>Distancia a recorrer (no obligatorio)</label>
             <input
               type="text"
               {...register('distance')}

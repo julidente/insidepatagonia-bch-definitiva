@@ -31,7 +31,14 @@ pnpm-debug.log*
 .DS_Store
 Thumbs.db
 
-#readmes que aun no estan listos 
-GuiaTuristica-README.md
-README.md
-TP FINAL README.md
+
+# Imágenes subidas desde el panel admin
+backend/public/uploads/activities/*
+!backend/public/uploads/activities/.gitkeep
+
+backend/public/uploads/posts/*
+!backend/public/uploads/posts/.gitkeep
+
+# Temporales de multer
+backend/tmp/*
+!backend/tmp/.gitkeep

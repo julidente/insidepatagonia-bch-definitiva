@@ -1,9 +1,9 @@
-import { optimizeCloudinaryImage } from "../utils/cloudinary";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import SEO from "../components/SEO";
 import { getPublishedPosts } from "../services/post.service";
 import { Post } from "../types/post";
+import { getImageUrl } from "../utils/imageUrl";
 
 export default function Blog() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -301,7 +301,7 @@ export default function Blog() {
                 >
                   {post.cover_image_url ? (
                     <img
-                      src={optimizeCloudinaryImage(post.cover_image_url, 600)}
+                      src={getImageUrl(post.cover_image_url)}
                       alt={post.title}
                       loading="lazy"
                       className="blog-card-image"

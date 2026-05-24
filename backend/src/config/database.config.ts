@@ -50,6 +50,7 @@ export class Database {
       console.log('✅ Conexión a PostgreSQL establecida correctamente.');
     } catch (error) {
       console.error('❌ Error al conectar con la base de datos:', error);
+      throw error;
     }
   }
 }

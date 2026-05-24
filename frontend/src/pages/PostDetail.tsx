@@ -1,9 +1,9 @@
-import { optimizeCloudinaryImage } from "../utils/cloudinary";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { getPostBySlug } from "../services/post.service";
 import { Post } from "../types/post";
+import { getImageUrl } from "../utils/imageUrl";
 
 const SITE_URL = "https://insidepatagonia-bch.com.ar";
 
@@ -61,9 +61,7 @@ export default function PostDetail() {
   const seoDescription =
     post.meta_description || post.description.slice(0, 155);
 
-  const optimizedImage = post.cover_image_url
-    ? optimizeCloudinaryImage(post.cover_image_url, 1200)
-    : "";
+  const imageUrl = getImageUrl(post.cover_image_url);
 
   return (
     <>
@@ -78,7 +76,7 @@ export default function PostDetail() {
         <meta property="og:url" content={canonicalUrl} />
         <meta property="og:type" content="article" />
 
-        {optimizedImage && <meta property="og:image" content={optimizedImage} />}
+        {imageUrl && <meta property="og:image" content={imageUrl} />}
 
         <script type="application/ld+json">
           {JSON.stringify({
@@ -86,7 +84,7 @@ export default function PostDetail() {
             "@type": "Article",
             headline: post.title,
             description: seoDescription,
-            image: optimizedImage || undefined,
+            image: imageUrl || undefined,
             author: {
               "@type": "Organization",
               name: "Inside Patagonia",
@@ -239,7 +237,7 @@ export default function PostDetail() {
 
           {post.cover_image_url ? (
             <img
-              src={optimizedImage}
+              src={imageUrl}
               alt={`Imagen del artículo ${post.title}`}
               className="post-detail-cover"
               loading="lazy"

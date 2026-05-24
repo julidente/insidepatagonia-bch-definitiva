@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { deletePost, getAllPosts } from "../../services/post.service";
 import type { Post } from "../../types/post";
+import { getImageUrl } from "../../utils/imageUrl";
 
 export default function AdminPosts() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -329,7 +330,7 @@ export default function AdminPosts() {
               <article key={post.post_id} className="admin-post-card">
                 {post.cover_image_url ? (
                   <img
-                    src={post.cover_image_url}
+                    src={getImageUrl(post.cover_image_url)}
                     alt={post.title}
                     className="admin-post-card-image"
                   />

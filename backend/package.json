@@ -1,11 +1,12 @@
 {
-  "name": "test",
+  "name": "insidepatagonia-backend",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
     "test": "jest",
-    "build": "npx tsc --watch",
+    "build": "tsc",
+    "start": "node dist/index.js",
     "dev": "ts-node src/index.ts",
     "devDocker": "ts-node-dev --respawn --transpile-only --ignore-watch node_modules src/index.ts",
     "lint:fix": "eslint . --ext .js,.ts --fix",

@@ -1,7 +1,10 @@
 // src/services/image.service.ts
 import fs from 'fs/promises';
-import cloudinary from '../config/cloudinary';
 import imageRepository from '../repositories/image.repository';
+import {
+  deleteActivityImageFile,
+  saveActivityImageLocally,
+} from '../utils/activityImageStorage';
 
 type CreateImageData = {
   filePath: string;
@@ -28,32 +31,35 @@ export class ImageService {
   }
 
   async create({ filePath, activity_id, is_cover = false }: CreateImageData) {
-    const result = await cloudinary.uploader.upload(filePath, {
-      folder: 'activities',
-    });
+    let savedImage: Awaited<ReturnType<typeof saveActivityImageLocally>> | null = null;
 
     try {
+      savedImage = await saveActivityImageLocally(filePath);
+
       if (is_cover) {
         const existingImages = await imageRepository.getByActivityId(activity_id);
         const existingCovers = existingImages.filter((img) => img.is_cover);
 
         for (const cover of existingCovers) {
-          if (cover.public_id) {
-            await cloudinary.uploader.destroy(cover.public_id);
-          }
-
+          await deleteActivityImageFile(cover);
           await imageRepository.delete(cover.image_id);
         }
       }
 
       const image = await imageRepository.create({
-        url: result.secure_url,
-        public_id: result.public_id,
+        url: savedImage.url,
+        public_id: savedImage.public_id,
         is_cover,
         activity_id,
       });
 
       return image;
+    } catch (error) {
+      if (savedImage) {
+        await fs.unlink(savedImage.filePath).catch(() => {});
+      }
+
+      throw error;
     } finally {
       await fs.unlink(filePath).catch(() => {});
     }
@@ -69,9 +75,7 @@ export class ImageService {
     const image = await imageRepository.getById(image_id);
     if (!image) throw new Error('Imagen no encontrada');
 
-    if (image.public_id) {
-      await cloudinary.uploader.destroy(image.public_id);
-    }
+    await deleteActivityImageFile(image);
 
     const deleted = await imageRepository.delete(image_id);
     if (!deleted) throw new Error('Imagen no encontrada');
@@ -81,52 +85,3 @@ export class ImageService {
 }
 
 export default new ImageService();
-
-// src/services/image.service.ts
-// usando dinary config
-// import { Image } from '../models/entity/image.entity';
-// import cloudinary from '../config/cloudinary';
-
-// class ImageService {
-//   async getAll() {
-//     return await Image.findAll();
-//   }
-
-//   async getById(image_id: number) {
-//     const image = await Image.findByPk(image_id);
-//     if (!image) throw new Error('Imagen no encontrada');
-//     return image;
-//   }
-
-//   async create(filePath: string, activity_id: number) {
-//     // Subir a Cloudinary
-//     const result = await cloudinary.uploader.upload(filePath, {
-//       folder: 'activities',
-//     });
-
-//     // Guardar URL en la DB
-//     const image = await Image.create({
-//       url: result.secure_url,
-//       activity_id,
-//     });
-
-//     return image;
-//   }
-
-//   async update(image_id: number, data: { url?: string; activity_id?: number }) {
-//     const image = await Image.findByPk(image_id);
-//     if (!image) throw new Error('Imagen no encontrada');
-//     return await image.update(data);
-//   }
-
-//   async delete(image_id: number) {
-//     const image = await Image.findByPk(image_id);
-//     if (!image) throw new Error('Imagen no encontrada');
-
-//     // Opcional: eliminar de Cloudinary si guardaste el public_id
-//     await image.destroy();
-//     return image;
-//   }
-// }
-
-// export default new ImageService();
