@@ -8,8 +8,6 @@ import imagesRoutes from './routes/image.routes';
 import authRoutes from './routes/auth.routes';
 import postRoutes from './routes/post.routes';
 
-import { setupSwagger } from '../src/config/swagger';
-
 const app = express();
 
 app.use(cors());
@@ -18,8 +16,6 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/images', express.static(path.join(__dirname, '../public/images')));
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
-
-setupSwagger(app);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/activities', activitiesRoutes);

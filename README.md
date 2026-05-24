@@ -3,15 +3,21 @@
 poner en el env del backend
 
 DB_NAME=guia_turistica
+
 DB_USER=insidepatagonia_user
+
 DB_PASSWORD=CONTRASEÑA_NUEVA_DEL_VPS
+
 DB_HOST=127.0.0.1
+
 DB_PORT=5432
 
 JWT_SECRET=SECRET_NUEVO_LARGO_Y_SEGURO
+
 JWT_EXPIRES_IN=4h
 
 ADMIN_USERNAME=admin
+
 ADMIN_PASSWORD_HASH=valor_temporal_o_hash_real
 ## 📋 Componentes Principales
 
