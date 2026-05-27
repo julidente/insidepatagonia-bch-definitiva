@@ -346,6 +346,10 @@ const AdminActivityForm = ({ mode }: Props) => {
             <option value="Cultural">Cultural</option>
             <option value="Gastronómica">Gastronómica</option>
             <option value="Ascenso">Ascenso</option>
+            <option value="Pesca">Pesca</option>
+            <option value="Observación de fauna">Observación de fauna</option>
+            <option value="Navegación">Navegación</option>
+            <option value="Exploración de cuevas">Exploración de cuevas</option>
           </select>
           {errors.activity_type && (
             <p style={errorStyle}>{String(errors.activity_type.message)}</p>
