@@ -466,7 +466,7 @@ const AdminActivityForm = ({ mode }: Props) => {
           <label>Lugar de encuentro 1</label>
           <input
             type="text"
-            {...register('meeting_point_1',)}
+            {...register('meeting_point_1')}
             style={inputStyle}
           />
           {errors.meeting_point_1 && (

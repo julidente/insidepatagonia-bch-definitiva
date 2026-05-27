@@ -112,7 +112,9 @@ export const createActivitySchema = z
       )
       .optional(),
   })
+
   .superRefine((data, ctx) => {
+    /*
     if (!data.meeting_point_1 || data.meeting_point_1.trim() === '') {
       ctx.addIssue({
         code: 'custom',
@@ -120,6 +122,8 @@ export const createActivitySchema = z
         message: 'El lugar de encuentro 1 es obligatorio',
       });
     }
+
+    */
 
     if (data.has_multiple_meeting_points) {
       if (!data.meeting_point_2 || data.meeting_point_2.trim() === '') {
