@@ -63,8 +63,10 @@ button {
 .site-header {
   background-color: #0c4a6e;
   color: white;
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  width: 100%;
   z-index: 1000;
 }
 
