@@ -212,7 +212,7 @@ const ActivityDetail = () => {
   const hasAvailableDate = Boolean(startDate && endDate);
 
   const whatsappUrl = `https://wa.me/5492944509064?text=${encodeURIComponent(
-    `Hola, quiero reservar la actividad: ${activity.name}`
+    `Hola, quiero recibir más información sobre la actividad: ${activity.name}`
   )}`;
 
   return (
@@ -804,7 +804,7 @@ const ActivityDetail = () => {
                 style={{ flexShrink: 0 }}
               />
 
-              Reservar por WhatsApp
+              Mas Informacion
             </a>
           </aside>
         </div>

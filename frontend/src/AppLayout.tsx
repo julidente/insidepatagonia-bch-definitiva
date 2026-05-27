@@ -257,7 +257,7 @@ const AppLayout = () => {
                 <FaMapMarkerAlt
                   style={{ ...footerIconStyle, color: "#ef4444" }}
                 />
-                Le Esmeralda 555, Cipolletti
+                La Esmeralda 555, Cipolletti
               </a>
             </div>
           </div>

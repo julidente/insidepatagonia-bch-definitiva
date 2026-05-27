@@ -274,7 +274,7 @@ const Contact = () => {
                 <FaMapMarkerAlt className="contact-icon" />
                 <div>
                   <h2>Cipolletti</h2>
-                  <p>Le Esmeralda 555</p>
+                  <p>La Esmeralda 555</p>
                   <span>Ver ubicación en Google Maps</span>
                 </div>
               </a>
