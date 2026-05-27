@@ -301,3 +301,14 @@ button {
     max-height: 64px !important;
   }
 }
+
+.site-main {
+  flex: 1 0 auto;
+  padding-top: 66px;
+}
+
+@media (max-width: 900px) {
+  .site-main {
+    padding-top: 62px;
+  }
+}

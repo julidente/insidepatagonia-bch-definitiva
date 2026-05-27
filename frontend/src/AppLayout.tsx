@@ -160,7 +160,7 @@ const AppLayout = () => {
         </div>
       </header>
 
-      <main style={{ flex: "1 0 auto" }}>
+      <main className="site-main">
         <Outlet />
       </main>
 
