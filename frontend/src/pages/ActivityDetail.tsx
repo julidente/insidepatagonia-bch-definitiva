@@ -804,7 +804,7 @@ const ActivityDetail = () => {
                 style={{ flexShrink: 0 }}
               />
 
-              Mas Informacion
+              Mas Información
             </a>
           </aside>
         </div>

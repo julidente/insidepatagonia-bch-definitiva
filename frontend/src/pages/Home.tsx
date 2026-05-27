@@ -146,13 +146,13 @@ const Home = () => {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             background-color: #000;
-            align-items: start;
+            align-items: stretch;
           }
 
           .identity-section img {
             width: 100%;
             height: auto;
-            object-fit: contain;
+            object-fit: cover;
             display: block;
           }
 
