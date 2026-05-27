@@ -62,7 +62,7 @@ const AdminActivityForm = ({ mode }: Props) => {
       technical_difficulty: '',
       effort_level: '',
       distance: '',
-      activity_days: 1,
+      activity_days: null,
       accommodation_days: null,
       accommodation_type: '',
       transport_type: '',
