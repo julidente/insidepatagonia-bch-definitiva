@@ -334,13 +334,18 @@ const AdminActivityForm = ({ mode }: Props) => {
             style={inputStyle}
           >
             <option value="">Seleccioná un tipo</option>
-            <option value="senderismo">Senderismo</option>
-            <option value="kayak">Kayak</option>
-            <option value="mtb">MTB bicicleta</option>
-            <option value="fotografía">Fotografía</option>
-            <option value="raqueta de nieve">Raqueta de nieve</option>
-            <option value="trekking">Trekking</option>
-            <option value="multiactividad">Multiactividad</option>
+            <option value="Senderismo">Senderismo</option>
+            <option value="Kayak">Kayak</option>
+            <option value="MTB bicicleta">MTB bicicleta</option>
+            <option value="Fotografía">Fotografía</option>
+            <option value="Raqueta de nieve">Raqueta de nieve</option>
+            <option value="Trekking">Trekking</option>
+            <option value="Multiactividad">Multiactividad</option>
+            <option value="Cabalgata">Cabalgata</option>
+            <option value="Nieve">Nieve</option>
+            <option value="Cultural">Cultural</option>
+            <option value="Gastronómica">Gastronómica</option>
+            <option value="Ascenso">Ascenso</option>
           </select>
           {errors.activity_type && (
             <p style={errorStyle}>{String(errors.activity_type.message)}</p>
