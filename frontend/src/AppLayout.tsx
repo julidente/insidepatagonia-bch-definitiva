@@ -245,7 +245,7 @@ const AppLayout = () => {
                 <FaMapMarkerAlt
                   style={{ ...footerIconStyle, color: "#ef4444" }}
                 />
-                Av. General Arias 2470, Bahía Blanca
+                General Arias 2470, Bahía Blanca, Argentina
               </a>
 
               <a
@@ -257,7 +257,7 @@ const AppLayout = () => {
                 <FaMapMarkerAlt
                   style={{ ...footerIconStyle, color: "#ef4444" }}
                 />
-                La Esmeralda 555, Cipolletti
+                La Esmeralda 555, Cipolletti, Argentina
               </a>
             </div>
           </div>
