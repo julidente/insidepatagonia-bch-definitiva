@@ -547,6 +547,17 @@ const Home = () => {
             <img src="/logos/logo-estudio-pisani.png" alt="Estudio Pisani" />
             <span>CIPOLLETTI</span>
           </a>
+
+          <a
+            href="https://wa.me/5492995763595"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="sales-point-card"
+            aria-label="Contactar por WhatsApp a Bar Hopfen"
+          >
+            <img src="/logos/hopfen.png" alt="Neuquén" />
+            <span>NEUQUÉN</span>
+          </a>
         </div>
       </section>
 
