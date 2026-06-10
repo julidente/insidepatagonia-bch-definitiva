@@ -254,9 +254,9 @@ const Home = () => {
 }
 
 /* Celular chico */
-@media (max-width: 480px) {
+@media (max-width: 520px) {
   .sales-points-section {
-    padding: 1.8rem 1rem 2.2rem;
+    padding: 1.8rem 0.5rem 2.2rem;
   }
 
   .sales-points-section h2 {
@@ -265,20 +265,24 @@ const Home = () => {
   }
 
   .sales-points-logos {
-    gap: 1.8rem;
+    max-width: 100%;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .sales-point-card {
-    width: 130px;
+    width: calc(33.333% - 0.5rem);
+    min-width: 0;
   }
 
   .sales-point-card img {
-    width: 100px;
-    height: 100px;
+    width: 82px;
+    height: 82px;
   }
 
   .sales-point-card span {
-    font-size: 0.72rem;
+    font-size: 0.68rem;
   }
 }
 
