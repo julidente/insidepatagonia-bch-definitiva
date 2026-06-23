@@ -371,6 +371,24 @@ const Home = () => {
             transform: scale(1.05);
           }
 
+          .home-zocalo-section {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background: #0f172a;
+}
+
+.home-zocalo-image {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
           @media (max-width: 900px) {
             .identity-section {
               grid-template-columns: 1fr;
@@ -467,6 +485,7 @@ const Home = () => {
             .activity-card {
               border-radius: 0.85rem;
             }
+            
           }
         `}
       </style>
@@ -772,6 +791,14 @@ const Home = () => {
             })}
           </div>
         )}
+      </section>
+
+      <section className="home-zocalo-section">
+        <img
+          src="/home/zocaloweb.png"
+          alt="Transporte TreeKSur"
+          className="home-zocalo-image"
+        />
       </section>
     </div>
   );
