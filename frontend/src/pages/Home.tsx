@@ -251,6 +251,7 @@ const Home = () => {
   .sales-point-card span {
     font-size: 0.78rem;
   }
+
 }
 
 /* Celular chico */
@@ -794,11 +795,18 @@ const Home = () => {
       </section>
 
       <section className="home-zocalo-section">
-        <img
-          src="/home/zocaloweb.png"
-          alt="Transporte TreeKSur"
-          className="home-zocalo-image"
-        />
+        <picture>
+          <source
+            media="(max-width: 768px)"
+            srcSet="/home/zocaloweb-mobile.png"
+          />
+
+          <img
+            src="/home/zocaloweb.png"
+            alt="Transporte TreeKSur"
+            className="home-zocalo-image"
+          />
+        </picture>
       </section>
     </div>
   );
