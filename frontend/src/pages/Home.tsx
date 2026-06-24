@@ -798,11 +798,11 @@ const Home = () => {
         <picture>
           <source
             media="(max-width: 768px)"
-            srcSet="/home/zocaloweb-mobile.png"
+            srcSet="/home/zocalowebmobile.png"
           />
 
           <img
-            src="/home/zocaloweb.png"
+            src="/home/zocalowebok.png"
             alt="Transporte TreeKSur"
             className="home-zocalo-image"
           />
