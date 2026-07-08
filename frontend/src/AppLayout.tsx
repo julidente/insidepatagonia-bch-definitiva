@@ -259,6 +259,39 @@ const AppLayout = () => {
                 />
                 La Esmeralda 555, Cipolletti, Argentina
               </a>
+              <div 
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "100%",
+                  gap: "0.7rem",
+                  marginTop: "0.65rem",
+                  flexWrap: "wrap",
+                }}
+              >
+                <img
+                  src="/logos/ivanpulloa.png"
+                  alt="Ivan Pulloa"
+                  style={{
+                    width: "150px",
+                    maxWidth: "100%",
+                    height: "auto",
+                    objectFit: "contain",
+                    display: "block",
+                  }}
+                />
+                <span
+                  style={{
+                    fontSize: "0.85rem",
+                    color: "rgb(255, 255, 255)",
+                    fontWeight: 600,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Legajo 20470
+                </span>
+              </div>
             </div>
           </div>
 
