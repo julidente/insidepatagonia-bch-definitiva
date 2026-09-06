@@ -498,9 +498,9 @@ const Home = () => {
       </section>
 
       <section className="identity-section">
-        <img src="/home/3.PNG" alt="Aventura - Inside Patagonia" />
-        <img src="/home/2.PNG" alt="Movimiento - RetoSur" />
-        <img src="/home/1.PNG" alt="Mirada - Ilumina" />
+        <img src="/home/30.PNG" alt="Aventura - Inside Patagonia" />
+        <img src="/home/20.PNG" alt="Movimiento - RetoSur" />
+        <img src="/home/10.PNG" alt="Mirada - Ilumina" />
       </section>
 
       <section className="home-hero-adventure">
