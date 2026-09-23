@@ -214,7 +214,7 @@ const AppLayout = () => {
                 title="Ilumina Photo Tours"
               >
                 <img
-                  src="/logos/LOGO ILUMINA NEW.png"
+                  src="/logos/LOGO ILUMINA.png"
                   alt="Ilumina Photo Tours"
                   className="site-footer__partner-main-logo"
                   style={{
