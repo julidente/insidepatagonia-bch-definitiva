@@ -171,121 +171,6 @@ const Home = () => {
             font-size: clamp(1.75rem, 5vw, 2.1rem);
           }
 
-          .sales-points-section {
-  width: 100%;
-  background: #e2e8f0;
-  padding: 2.4rem 1rem 2.8rem;
-  text-align: center;
-}
-
-.sales-points-section h2 {
-  margin: 0 0 1.8rem;
-  font-size: clamp(1.7rem, 4vw, 2.3rem);
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  color: #111827;
-}
-
-.sales-points-logos {
-  max-width: 700px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 4rem;
-  flex-wrap: wrap;
-}
-
-.sales-point-card {
-  width: 170px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-decoration: none;
-  color: #1f2937;
-  transition: transform 0.25s ease, opacity 0.25s ease;
-}
-
-.sales-point-card:hover {
-  transform: translateY(-5px);
-  opacity: 0.85;
-}
-
-.sales-point-card img {
-  width: 140px;
-  height: 140px;
-  object-fit: contain;
-  margin-bottom: 0.7rem;
-}
-
-.sales-point-card span {
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-/* Tablet */
-@media (max-width: 768px) {
-  .sales-points-section {
-    padding: 2rem 1rem 2.4rem;
-  }
-
-  .sales-points-section h2 {
-    margin-bottom: 1.5rem;
-  }
-
-  .sales-points-logos {
-    gap: 2.5rem;
-  }
-
-  .sales-point-card {
-    width: 145px;
-  }
-
-  .sales-point-card img {
-    width: 115px;
-    height: 115px;
-  }
-
-  .sales-point-card span {
-    font-size: 0.78rem;
-  }
-
-}
-
-/* Celular chico */
-@media (max-width: 520px) {
-  .sales-points-section {
-    padding: 1.8rem 0.5rem 2.2rem;
-  }
-
-  .sales-points-section h2 {
-    font-size: 1.45rem;
-    margin-bottom: 1.4rem;
-  }
-
-  .sales-points-logos {
-    max-width: 100%;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .sales-point-card {
-    width: calc(33.333% - 0.5rem);
-    min-width: 0;
-  }
-
-  .sales-point-card img {
-    width: 82px;
-    height: 82px;
-  }
-
-  .sales-point-card span {
-    font-size: 0.68rem;
-  }
-}
 
           .home-experiences-section {
             max-width: 1120px;
@@ -372,23 +257,7 @@ const Home = () => {
             transform: scale(1.05);
           }
 
-          .home-zocalo-section {
-  width: 100%;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  background: #0f172a;
-}
 
-.home-zocalo-image {
-  width: 100%;
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
 
           @media (max-width: 900px) {
             .identity-section {
@@ -543,45 +412,6 @@ const Home = () => {
             Encontrá tu próxima aventura entre montañas, glaciares y lagos
             patagónicos.
           </p>
-        </div>
-      </section>
-
-      <section className="sales-points-section">
-        <h2>PUNTOS DE VENTA</h2>
-
-        <div className="sales-points-logos">
-          <a
-            href="https://wa.me/5491169650927"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="sales-point-card"
-            aria-label="Contactar por WhatsApp a Hotel Maneco"
-          >
-            <img src="/logos/logo-maneco.png" alt="Hotel Maneco" />
-            <span>CAVIAHUE</span>
-          </a>
-
-          <a
-            href="https://wa.me/5492995237867"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="sales-point-card"
-            aria-label="Contactar por WhatsApp a Estudio Pisani"
-          >
-            <img src="/logos/logo-estudio-pisani.png" alt="Estudio Pisani" />
-            <span>CIPOLLETTI</span>
-          </a>
-
-          <a
-            href="https://wa.me/5492995763595"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="sales-point-card"
-            aria-label="Contactar por WhatsApp a Bar Hopfen"
-          >
-            <img src="/logos/hopfen.png" alt="Neuquén" />
-            <span>NEUQUÉN</span>
-          </a>
         </div>
       </section>
 
@@ -792,21 +622,6 @@ const Home = () => {
             })}
           </div>
         )}
-      </section>
-
-      <section className="home-zocalo-section">
-        <picture>
-          <source
-            media="(max-width: 768px)"
-            srcSet="/home/zocalowebmobile.png"
-          />
-
-          <img
-            src="/home/zocalowebok.png"
-            alt="Transporte TreeKSur"
-            className="home-zocalo-image"
-          />
-        </picture>
       </section>
     </div>
   );
